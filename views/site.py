@@ -48,6 +48,7 @@ def post():
             friends_only=form.friends_only.data,
             followers_only=form.followers_only.data,
             user_id=current_user.id,
+            comments_disabled=form.comments_disabled.data,
         )
 
         db.session.add(save_post)

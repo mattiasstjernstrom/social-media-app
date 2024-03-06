@@ -28,5 +28,6 @@ class PostForm(FlaskForm):
         render_kw={"placeholder": "Your thoughts..."},
     )
     draft = SwitchField("Draft")
-    friends_only = BooleanField("Friends Only")
-    followers_only = BooleanField("Followers Only")
+    friends_only = SwitchField("Friends Only")
+    followers_only = SwitchField("Followers Only")
+    comments_disabled = SwitchField("Disable comments on this post")

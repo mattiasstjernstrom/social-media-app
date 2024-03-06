@@ -1,7 +1,12 @@
 {% extends "base.html" %} {% block content %}
 <h1>{{ post.title }}</h1>
-<img src="{{ post.splash_url }}" alt="{{ post.title }}" />
+{% if post.splash_url %}
+<img src="{{ post.splash_url }}" alt="{{ post.title }}" /> {% endif %}
 <p>{{ post.content }}</p>
-{% if post.splash_url %} {% endif %}
-<p>Published on {{ post.date_posted }} by {{ post.owner_user.username }}</p>
-{% endblock %}
+<p>
+  Published on {{ post.date_posted.strftime('%Y-%m-%d') }} at {{
+  post.date_posted.strftime('%H:%M') }} by {{ post.owner_user.username }}
+</p>
+{% if post.comments_disabled %}
+<p>Comments are not allowed on this post.</p>
+{% else %} {% include "posts/view_comments.html" %} {% endif %} {% endblock %}

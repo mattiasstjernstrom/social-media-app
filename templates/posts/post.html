@@ -19,15 +19,25 @@
       <div class="col">{{ render_field(form.followers_only) }}</div>
     </div>
     <div class="row">
-      <div class="col">
-        {{ render_field(form.draft) }}
-        <button
-          type="submit"
-          class="btn btn-lg btn-secondary fw-bold border-white bg-white">
-          Submit
-        </button>
-      </div>
+      <div class="col">{{ render_field(form.draft) }}</div>
+      <div class="col">{{ render_field(form.comments_disabled)}}</div>
     </div>
+    <button
+      type="submit"
+      id="submit"
+      class="btn btn-lg btn-secondary fw-bold border-white bg-white">
+      Publish
+    </button>
   </form>
 </div>
+{% endblock %} {% block scripts %} {{ super() }}
+<script>
+  document.getElementById("draft").addEventListener("change", function () {
+    if (this.checked) {
+      document.getElementById("submit").innerHTML = "Save Draft";
+    } else {
+      document.getElementById("submit").innerHTML = "Publish";
+    }
+  });
+</script>
 {% endblock %}

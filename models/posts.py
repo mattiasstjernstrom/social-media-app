@@ -17,6 +17,7 @@ class UserPost(db.Model):
     likes = db.Column(db.Integer, default=0)
     shares = db.Column(db.Integer, default=0)
     comments = db.Column(db.Integer, default=0)
+    comments_disabled = db.Column(db.Boolean, default=False)
 
     owner_user = db.relationship("User", backref="user_posts", lazy=True)
 
