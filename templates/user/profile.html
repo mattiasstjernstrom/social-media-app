@@ -1,0 +1,42 @@
+{% extends "base.html" %}{% block content %}
+<h1>{{ page_title }}</h1>
+<p>Welcome</p>
+<div class="row">
+  <h2>{{ user.username }} Posts</h2>
+  {%for post in posts %}
+  <div class="row callout">
+    {% if post.splash_url != "" %}
+    <div class="col-3">
+      <div class="skeleton">
+        <a href="{{ url_for('site.view_post', id=post.id) }}">
+          <div
+            class="post-image"
+            style="background-image: url('{{ post.splash_url }}');"></div>
+        </a>
+      </div>
+    </div>
+    {% endif %}
+    <div class="col-8">
+      <h2>
+        <a href="{{ url_for('site.view_post', id=post.id) }}" class="text-light"
+          >{{ post.title }}</a
+        >
+      </h2>
+      <p style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
+        {{ post.content_truncated }}
+      </p>
+      <p>
+        Posted {{ post.date_posted }} -
+        <a
+          href="{{ url_for('site.delete_post', id=post.id) }}"
+          class="link-danger"
+          >Delete</a
+        >
+      </p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %} {% block scripts %} {{ super() }}
+<script src="{{ url_for('static', filename='js/profile_page.js') }}"></script>
+{% endblock %}
