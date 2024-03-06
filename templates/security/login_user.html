@@ -1,0 +1,32 @@
+{% extends "unauth/base.html" %}{% from "unauth/_macros.html" import prop_next
+%} {% from 'bootstrap5/form.html' import render_field %} {% include
+"security/_messages.html" %}{% block content %}
+<div class="w-50 p-3 mx-auto text-start">
+  <h2>{{ page_title }}</h2>
+  <form
+    action="{{ url_for_security('login') }}{{ prop_next() }}"
+    method="post"
+    name="form">
+    {{ login_user_form.csrf_token() }} {{ render_field(login_user_form.email) }}
+    {{ render_field(login_user_form.password) }}
+    <div class="row">
+      <div class="w-10">{{ render_field(login_user_form.remember) }}</div>
+    </div>
+    <div class="row">
+      <div class="w-10">
+        <button
+          type="submit"
+          class="btn btn-lg btn-secondary fw-bold border-white bg-white">
+          Sign in
+        </button>
+        <a
+          href="#"
+          class="btn btn-lg btn-secondary fw-bold border-black link-light"
+          >...or sign up</a
+        >
+      </div>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

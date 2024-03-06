@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title }}</title>
+    <meta name="theme-color" content="#7952b3" />
+    {% block styles %} {{ bootstrap.load_css() }}
+    <link
+      href="{{url_for('static',filename='css/custom.css')}}"
+      rel="stylesheet" />
+    <link
+      href="{{url_for('static',filename='css/cover.css')}}"
+      rel="stylesheet" />
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    {% endblock %}
+  </head>
+  <body class="d-flex h-100 text-center text-white bg-dark">
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <header class="mb-auto">
+        <div>
+          <h3 class="float-md-start mb-0">{{ title }}</h3>
+          <nav class="nav nav-masthead justify-content-center float-md-end">
+            <a
+              class="nav-link {{ is_active('unauthenticated.welcome') }}"
+              href="{{ url_for('unauthenticated.welcome') }}"
+              >Home</a
+            >
+            <a
+              class="nav-link {{ is_active('unauthenticated.sign_up') }}"
+              href="{{ url_for('unauthenticated.sign_up') }}"
+              >Sign up</a
+            >
+            <a
+              class="nav-link {{ is_active('unauthenticated.sign_in') }}"
+              href="{{ url_for('unauthenticated.sign_in') }}"
+              >Login</a
+            >
+          </nav>
+        </div>
+      </header>
+
+      <main class="px-3">
+        {% block content %}
+        <h1>{{ page_title }}</h1>
+        <p class="lead">{{ content }}</p>
+        <p class="lead">
+          <a
+            href="#"
+            class="btn btn-lg btn-secondary fw-bold border-white bg-white"
+            >Learn more</a
+          >
+          <a href="#" class="btn btn-lg plain-link fw-bold">Sign up</a>
+        </p>
+        {% endblock %}
+      </main>
+
+      <footer class="mt-auto text-white-50">
+        <p>
+          An
+          <a href="https://stjenstrom.me" class="link-light">stjernstrom</a>
+          app.
+        </p>
+      </footer>
+    </div>
+    {% block scripts %} {{ bootstrap.load_js() }} {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {{ page_title }}{% if page_title %} &middot; {{ title }}{% else%} {{ title
+      }}{% endif %}
+    </title>
+    <meta name="theme-color" content="#7952b3" />
+    {% block styles %} {{ bootstrap.load_css() }}
+    <link
+      href="{{url_for('static',filename='css/custom.css')}}"
+      rel="stylesheet" />
+    <link
+      href="{{url_for('static',filename='css/cover.css')}}"
+      rel="stylesheet" />
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    {% endblock %}
+  </head>
+  <body class="d-flex h-100 text-white bg-dark">
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <header class="mb-auto">
+        <div>
+          <h3 class="float-md-start mb-0">{{ title }}</h3>
+          <nav class="nav nav-masthead justify-content-center float-md-end">
+            <a
+              class="nav-link {{ is_active('site.index') }}"
+              href="{{ url_for('site.index') }}"
+              >Home</a
+            >
+            <a
+              class="nav-link {{ is_active('site.profile') }}"
+              href="{{ url_for('site.profile', id=current_user.id) }}"
+              class="nav-link"
+              >Profile</a
+            >
+            <a class="nav-link" href="/logout">Logout</a>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        {% block content %}
+        <h1>{{ page_title }}</h1>
+        {{ content }} {% endblock %}
+      </main>
+
+      <footer class="mt-auto text-white-50 text-center">
+        <p>
+          An
+          <a href="https://stjenstrom.me" class="text-white">stjernstrom</a>
+          app.
+        </p>
+      </footer>
+    </div>
+    {% block scripts %} {{ bootstrap.load_js() }} {% endblock %}
+  </body>
+</html>
