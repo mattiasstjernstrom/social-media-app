@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import current_user
 from flask_security import Security
 
-from forms.user_handlers import SignInForm, SignUpForm
+from forms.user import SignInForm, SignUpForm
 
 unauthenticated = Blueprint("unauthenticated", __name__)
 

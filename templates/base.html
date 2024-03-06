@@ -44,6 +44,7 @@
               href="{{ url_for('site.index') }}"
               >Home</a
             >
+            <a class="nav-link" href="{{ url_for('site.post') }}">Post</a>
             <a
               class="nav-link {{ is_active('site.profile') }}"
               href="{{ url_for('site.profile', id=current_user.id) }}"
@@ -54,8 +55,36 @@
           </nav>
         </div>
       </header>
+      <section class="flash-messages mx-auto">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %}{% for category, message in messages %}
+        <div
+          class="alert alert-{{ category }} alert-dismissible fade show"
+          role="alert">
+          {{ message }}
+          <button
+            type="button"
+            class="btn-close"
+            style="scale: 0.8"
+            data-bs-dismiss="alert"
+            aria-label="Close"></button>
+        </div>
+        {% endfor %} {% endif %} {% endwith %}
+        <!-- test-flash
+        <div
+          class="alert alert-success alert-dismissible fade show"
+          role="alert">
+          <strong>Success!</strong> This is a success alert—check it out!
+          <button
+            type="button"
+            class="btn-close"
+            style="scale: 0.8"
+            data-bs-dismiss="alert"
+            aria-label="Close"></button>
+        </div> -->
+      </section>
 
-      <main>
+      <main class="h-100 py-3">
         {% block content %}
         <h1>{{ page_title }}</h1>
         {{ content }} {% endblock %}

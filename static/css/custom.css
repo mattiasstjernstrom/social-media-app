@@ -1,3 +1,11 @@
 label {
   cursor: pointer;
 }
+#content {
+  height: 350px;
+}
+/* input placeholder color */
+.form-control::placeholder {
+  color: #ccc;
+  opacity: 1;
+}

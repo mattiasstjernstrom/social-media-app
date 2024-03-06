@@ -1,0 +1,33 @@
+{% extends "base.html" %} {% from 'bootstrap5/form.html' import render_field %}
+{% block content %}
+<div class="w-100">
+  <h2>{{ page_title }}</h2>
+  <p>Welcome to the post page!</p>
+  <form method="POST" class="w-75 mx-auto py-5">
+    {{ form.csrf_token }}
+    <div class="row">
+      <div class="w-10">{{ render_field(form.title) }}</div>
+    </div>
+    <div class="row">
+      <div class="w-10">{{ render_field(form.splash_url) }}</div>
+    </div>
+    <div class="row">
+      <div class="w-10">{{ render_field(form.content) }}</div>
+    </div>
+    <div class="row">
+      <div class="col">{{ render_field(form.friends_only) }}</div>
+      <div class="col">{{ render_field(form.followers_only) }}</div>
+    </div>
+    <div class="row">
+      <div class="col">
+        {{ render_field(form.draft) }}
+        <button
+          type="submit"
+          class="btn btn-lg btn-secondary fw-bold border-white bg-white">
+          Submit
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

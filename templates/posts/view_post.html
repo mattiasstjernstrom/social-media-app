@@ -1,0 +1,7 @@
+{% extends "base.html" %} {% block content %}
+<h1>{{ post.title }}</h1>
+<img src="{{ post.splash_url }}" alt="{{ post.title }}" />
+<p>{{ post.content }}</p>
+{% if post.splash_url %} {% endif %}
+<p>Published on {{ post.date_posted }} by {{ post.owner_user.username }}</p>
+{% endblock %}

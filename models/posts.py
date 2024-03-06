@@ -18,6 +18,8 @@ class UserPost(db.Model):
     shares = db.Column(db.Integer, default=0)
     comments = db.Column(db.Integer, default=0)
 
+    owner_user = db.relationship("User", backref="user_posts", lazy=True)
+
     user_post_likes = db.relationship(
         "UserPostLikes", backref="user_post_likes", lazy=True
     )
