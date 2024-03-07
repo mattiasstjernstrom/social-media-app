@@ -1,11 +1,9 @@
-
 from flask_security import UserMixin, RoleMixin, AsaList
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.mutable import MutableList
 from sqlalchemy import Boolean, DateTime, Column, Integer, String, ForeignKey
 
 from models.db import db
-
 
 
 class User(db.Model, UserMixin):
@@ -25,6 +23,22 @@ class User(db.Model, UserMixin):
     roles = relationship(
         "Role", secondary="roles_users", backref=backref("users", lazy="dynamic")
     )
+
+    def to_dict(self):
+        return {
+            "user_id": self.id,
+            "email": self.email,
+            "username": self.username,
+            "password": self.password,
+            "last_login_at": self.last_login_at,
+            "current_login_at": self.current_login_at,
+            "last_login_ip": self.last_login_ip,
+            "current_login_ip": self.current_login_ip,
+            "login_count": self.login_count,
+            "active": self.active,
+            "fs_uniquifier": self.fs_uniquifier,
+            "confirmed_at": self.confirmed_at,
+        }
 
 
 class RolesUsers(db.Model):

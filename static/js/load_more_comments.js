@@ -38,8 +38,8 @@ function fetchMoreComments() {
 }
 
 function comment_template(comment) {
-  let fixedDate = formatCommentDate(comment.date_commented);
-  return `
+  let fixedDate = humanizeTime(comment.date_commented);
+  let commentElement = `
     <div class="col-1">
         <img
             src="https://via.placeholder.com/50"
@@ -55,14 +55,24 @@ function comment_template(comment) {
                         href="/profile/${comment.user_id}/"
                         class="link-dark"
                         style="text-decoration: none"
-                        >${comment.user_id}</a
+                        >${comment.username}</a
                     >
                 </strong>
                 says:
                 <p class="card-text">${comment.content}</p>
-                <small>${fixedDate}</small>
+                <small>${fixedDate}`;
+  if (comment.user_id === currentUser) {
+    commentElement += ` &middot;
+              <a
+                href="/post/${postId}/comment/${comment.id}/delete/"
+                class="link-danger"
+                >Delete</a
+              >`;
+  }
+  commentElement += `</small>
             </div>
         </div>
     </div>
     `;
+  return commentElement;
 }

@@ -1,9 +1,6 @@
 from datetime import datetime, timedelta
 
 
-from datetime import datetime, timedelta
-
-
 def humanize_time(dt):
     now = datetime.utcnow()
     diff = now - dt

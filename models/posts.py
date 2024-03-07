@@ -70,6 +70,8 @@ class UserPostComments(db.Model):
     date_commented = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     date_edited = db.Column(db.DateTime, nullable=True)
 
+    comment_owner = db.relationship("User", backref="user_post_comments", lazy=True)
+
     def __repr__(self):
         return f"UserPostComments('{self.user_id}', '{self.post_id}', '{self.date_commented}')"
 

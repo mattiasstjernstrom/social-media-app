@@ -103,7 +103,11 @@
       </footer>-->
     </div>
     {% block scripts %} {{ bootstrap.load_js() }}
+    <script>
+      const currentUser = {{ current_user.id }};
+    </script>
     <script src="{{url_for('static',filename='js/main.js')}}"></script>
+
     {% endblock %}
   </body>
 </html>

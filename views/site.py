@@ -216,3 +216,21 @@ def comment_post(post_id):
     db.session.commit()
 
     return jsonify("Post commented"), 201
+
+
+@site.get("/post/<int:post_id>/comment/<int:comment_id>/delete/")
+@login_required
+def delete_comment(post_id, comment_id):
+    get_comment = UserPostComments.query.get(comment_id)
+    if not get_comment:
+        flash("Comment not found", "danger")
+        return redirect(url_for("site.view_post", id=post_id))
+
+    if get_comment.user_id != current_user.id:
+        flash("You cannot delete this comment", "danger")
+
+    db.session.delete(get_comment)
+    db.session.commit()
+
+    flash("Comment deleted", "success")
+    return redirect(url_for("site.view_post", id=post_id))

@@ -36,12 +36,21 @@
                 href="{{ url_for('site.profile', id=comment.user_id) }}"
                 class="link-dark"
                 style="text-decoration: none"
-                >{{ comment.user_id }}</a
+                >{{ comment.username }}</a
               >
             </strong>
             says:
             <p class="card-text">{{ comment.content }}</p>
-            <small> {{ comment.date_commented }}</small>
+            <small>
+              {{ comment.date_commented }} {% if comment.user_id ==
+              current_user.id %} &middot;
+              <a
+                href="{{ url_for('site.delete_comment', post_id=post.id, comment_id=comment.id) }}"
+                class="link-danger"
+                >Delete</a
+              >
+              {% endif %}
+            </small>
           </div>
         </div>
       </div>
