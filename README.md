@@ -1,6 +1,8 @@
 # Social Media App
 
-! This project is WIP and may not work if you run it as it is!
+> > > ```diff
+> > > ! This project is WIP and may not work if you run it as it is!
+> > > ```
 
 ## Introduction
 
