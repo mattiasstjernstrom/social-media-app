@@ -1,8 +1,8 @@
 # Social Media App
 
-```diff
-! This project is WIP and may not work if you run it as it is!
-```
+<span style="color:orange; background-color: grey;">
+This project is WIP and may not work if you run it as it is!
+</span>
 
 ## Introduction
 
