@@ -28,6 +28,7 @@ This project leverages the following technologies:
 
 - **Flask:** A micro web framework written in Python, used for handling backend operations including server setup, routing, and interaction with databases.
 - **HTML, CSS, and JavaScript:** Core web technologies used for structuring, styling, and adding interactivity to the web pages, ensuring a user-friendly interface and experience.
+- **Bootstrap:** Some use of bootstrap has added to this project to speed up some things
 
 ## Contribution
 
