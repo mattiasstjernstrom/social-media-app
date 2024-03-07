@@ -42,7 +42,7 @@
             says:
             <p class="card-text">{{ comment.content }}</p>
             <small>
-              {{ comment.date_commented }} {% if comment.user_id ==
+              {{ comment.date_humanized }} {% if comment.user_id ==
               current_user.id %} &middot;
               <a
                 href="{{ url_for('site.delete_comment', post_id=post.id, comment_id=comment.id) }}"

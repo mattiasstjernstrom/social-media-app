@@ -1,6 +1,7 @@
 from flask import jsonify
 from models.posts import UserPostComments
 from models.users import User
+from modules.date_logics import humanize_time
 
 
 class Api:
@@ -24,9 +25,10 @@ class Api:
                 "post_id": comment.post_id,
                 "content": comment.content,
                 "date_commented": comment.date_commented,
+                "date_humanized": humanize_time(comment.date_commented),
                 "date_edited": comment.date_edited,
             }
-            # only get username and active status
+
             for key, value in comment_owner.to_dict().items():
                 if key in ["username", "active"]:
                     comment_dict[key] = value
@@ -42,6 +44,4 @@ class Api:
         )
 
     def load_toJSON(self, id, limit, offset):
-        comments = self.load(id, limit, offset)
-
-        return jsonify(comments)
+        return jsonify(self.load(id, limit, offset))

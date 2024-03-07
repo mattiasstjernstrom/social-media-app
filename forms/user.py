@@ -4,7 +4,9 @@ from wtforms import (
     PasswordField,
     validators,
     BooleanField,
+    StringField,
 )
+from wtforms.validators import DataRequired
 
 
 class SignInForm(FlaskForm):
@@ -36,4 +38,12 @@ class SignUpForm(FlaskForm):
         "Confirm Password",
         [validators.EqualTo("password", message="Passwords must match")],
         render_kw={"placeholder": "•••••••••••••••"},
+    )
+
+
+class CreateUsernameForm(FlaskForm):
+    username = StringField(
+        "Username",
+        [validators.Length(min=1, max=30), validators.Regexp(r"^\w+$"), DataRequired()],
+        render_kw={"placeholder": "Enter a fancy username!", "autofocus": True},
     )

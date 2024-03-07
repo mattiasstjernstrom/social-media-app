@@ -42,10 +42,10 @@ def profile(id):
 
     get_posts = []
     for post in raw_posts:
-        humanized_date = humanize_time(post.date_posted)
         post_dict = {
             "id": post.id,
-            "date_posted": humanized_date,
+            "date_posted": post.date_posted,
+            "humanized_date": humanize_time(post.date_posted),
             "title": post.title,
             "splash_url": post.splash_url,
             "content_truncated": post.content_truncated,
@@ -202,7 +202,6 @@ def comment_post(post_id):
         return jsonify("Post not found"), 404
 
     get_comment = CommentOnPostForm(request.form)
-    print(request.form)
     if not get_comment.validate():
         return jsonify("Invalid comment"), 400
 

@@ -105,6 +105,7 @@
     {% block scripts %} {{ bootstrap.load_js() }}
     <script>
       const currentUser = {{ current_user.id }};
+      const currentUserName = "{{ current_user.username }}";
     </script>
     <script src="{{url_for('static',filename='js/main.js')}}"></script>
 

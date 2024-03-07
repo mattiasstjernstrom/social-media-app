@@ -9,7 +9,8 @@ class DevConfig:
 
     SECURITY_PASSWORD_SALT = "randomsecurepasswordsalt"
     SECURITY_REGISTERABLE = True
-    SECURITY_REGISTER_URL = "/register"
+    # SECURITY_REGISTER_URL = "/register"
+    SECURITY_POST_REGISTER_VIEW = "/create-username"
     SECURITY_LOGIN_URL = "/login"
     SECURITY_LOGOUT_URL = "/logout"
     SECURITY_POST_LOGIN_VIEW = "/"

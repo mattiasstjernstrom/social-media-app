@@ -1,0 +1,20 @@
+{% extends "unauth/base.html" %}{% from 'bootstrap5/form.html' import
+render_field %}{% block content %}
+<h1>{{ page_title }}</h1>
+<p class="lead">Please enter your username to continue.</p>
+<div class="w-50 p-3 mx-auto text-start">
+  {% with messages = get_flashed_messages() %} {% if messages %}
+  <div class="alert alert-warning">{{ messages[0] }}</div>
+  {% endif %} {% endwith %}
+  <form method="post">
+    {{ form.hidden_tag() }} {{ render_field(form.username) }}
+    <div class="text-end">
+      <button
+        type="submit"
+        class="btn btn-lg btn-secondary fw-bold border-white bg-white">
+        Continue &rarr;
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

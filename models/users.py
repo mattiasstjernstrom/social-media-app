@@ -10,7 +10,7 @@ class User(db.Model, UserMixin):
     __tablename__ = "user"
     id = Column(Integer, primary_key=True)
     email = Column(String(255), unique=True)
-    username = Column(String(255), nullable=True)
+    username = Column(String(255), nullable=True, unique=True)
     password = Column(String(255), nullable=False)
     last_login_at = Column(DateTime())
     current_login_at = Column(DateTime())
