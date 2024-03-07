@@ -6,11 +6,12 @@ from sqlalchemy import func
 from api.comments import Api
 from forms.post import PostForm
 from forms.comments import CommentOnPostForm
-from modules.date_logics import humanize_time
 from models.db import db
 from models.posts import UserPost, UserPostLikes, UserPostComments
-from models.users import User
+from models.users import User, Followers
 from models.check_likes import check_liked
+from modules.date_logics import humanize_time
+from modules.follower_logics import check_following
 
 site = Blueprint("site", __name__)
 
@@ -52,9 +53,9 @@ def profile(id):
         }
         get_posts.append(post_dict)
 
-    context = {
-        "page_title": "Profile",
-    }
+    is_following = check_following(current_user.id, id)
+
+    context = {"page_title": "Profile", "is_following": is_following}
     return (
         render_template("user/profile.html", **context, user=get_user, posts=get_posts),
         200,
@@ -233,3 +234,68 @@ def delete_comment(post_id, comment_id):
 
     flash("Comment deleted", "success")
     return redirect(url_for("site.view_post", id=post_id))
+
+
+@site.get("/follow/<int:user_id>/")
+@login_required
+def follow_user(user_id):
+    is_following = check_following(current_user.id, user_id)
+    if is_following:
+        flash("You are already following this user", "info")
+        return redirect(url_for("site.profile", id=user_id))
+
+    new_follow = Followers(follower_id=current_user.id, followed_id=user_id)
+    db.session.add(new_follow)
+    db.session.commit()
+
+    flash("You are now following this user", "success")
+    return redirect(url_for("site.profile", id=user_id))
+
+
+@site.get("/unfollow/<int:user_id>/")
+@login_required
+def unfollow_user(user_id):
+    is_following = check_following(current_user.id, user_id)
+    if not is_following:
+        flash("You are not following this user", "info")
+        return redirect(url_for("site.profile", id=user_id))
+
+    get_follow = (
+        db.session.query(Followers)
+        .filter(
+            Followers.follower_id == current_user.id, Followers.followed_id == user_id
+        )
+        .first()
+    )
+    db.session.delete(get_follow)
+    db.session.commit()
+
+    flash("You are no longer following this user", "success")
+    return redirect(url_for("site.profile", id=user_id))
+
+
+@site.get("/followers/<int:user_id>/")
+@login_required
+def followers(user_id):
+    get_user = User.query.get(user_id)
+    get_followers = (
+        db.session.query(Followers)
+        .filter(Followers.followed_id == user_id)
+        .order_by(Followers.id.desc())
+        .all()
+    )
+
+    followers_list = []
+    for follower in get_followers:
+        follower_user = User.query.get(follower.follower_id)
+        followers_list.append(follower_user)
+
+    context = {
+        "page_title": "Followers",
+    }
+    return (
+        render_template(
+            "user/followers.html", **context, user=get_user, followers=followers_list
+        ),
+        200,
+    )

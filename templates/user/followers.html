@@ -1,0 +1,33 @@
+{% extends "base.html" %}{% block content %}
+<h1>{{ page_title }}</h1>
+<div class="row">
+  <div class="col-md-6">
+    <p>{{ user.username }}s followers:</p>
+    <ul>
+      {% if followers|length == 0 %}
+      <li>Has no followes</li>
+      {% endif %} {% for follower in followers %}
+      <li>
+        <a href="{{ url_for('site.profile', id=follower.id) }}"
+          >{{ follower.username }}</a
+        >
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="col-md-6">
+    <p>{{ user.username }}s following:</p>
+    <ul>
+      {% if following|length == 0 %}
+      <li>Is not following anyone</li>
+      {% endif %} {% for following in following %}
+      <li>
+        <a href="{{ url_for('site.profile', id=following.id) }}"
+          >{{ following.username }}</a
+        >
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

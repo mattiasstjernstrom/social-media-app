@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask_security import UserMixin, RoleMixin, AsaList
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.mutable import MutableList
@@ -56,6 +57,16 @@ class Role(db.Model, RoleMixin):
     permissions = Column(MutableList.as_mutable(AsaList()), nullable=True)
 
 
-class AlembicVersion(db.Model):
-    __tablename__ = "alembic_version"
-    version_num = db.Column(db.String(32), primary_key=True)
+class Followers(db.Model):
+    __tablename__ = "followers"
+    id = Column(Integer, primary_key=True)
+    follower_id = Column(Integer, ForeignKey("user.id"))
+    followed_id = Column(Integer, ForeignKey("user.id"))
+    timestamp = Column(DateTime, default=datetime.utcnow)
+
+    follower = relationship(
+        "User", foreign_keys=[follower_id], backref=backref("followed", lazy="dynamic")
+    )
+    followed = relationship(
+        "User", foreign_keys=[followed_id], backref=backref("followers", lazy="dynamic")
+    )
