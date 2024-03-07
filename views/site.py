@@ -1,12 +1,16 @@
-from flask import Blueprint, flash, render_template, request, redirect, url_for
+from datetime import datetime
+from flask import Blueprint, flash, render_template, request, redirect, url_for, jsonify
 from flask_login import current_user, login_required
 from sqlalchemy import func
 
+from api.comments import Api
 from forms.post import PostForm
+from forms.comments import CommentOnPostForm
 from modules.date_logics import humanize_time
 from models.db import db
-from models.posts import UserPost
+from models.posts import UserPost, UserPostLikes, UserPostComments
 from models.users import User
+from models.check_likes import check_liked
 
 site = Blueprint("site", __name__)
 
@@ -89,18 +93,26 @@ def post():
 @site.route("/post/<int:id>/")
 def view_post(id):
     get_post = UserPost.query.get(id)
-    if not get_post:
+    get_comments = Api().load(id)
+
+    if not get_post or (get_post.draft and get_post.owner_user.id != current_user.id):
         flash("Post not found", "danger")
         return redirect(url_for("site.index"))
-    elif get_post.draft and get_post.owner_user.id != current_user.id:
-        flash("Post not found", "danger")
-        return redirect(url_for("site.index"))
+
+    liked = check_liked(id)
 
     context = {
         "page_title": get_post.title,
     }
     return (
-        render_template("posts/view_post.html", **context, post=get_post),
+        render_template(
+            "posts/view_post.html",
+            **context,
+            post=get_post,
+            all_comments=get_comments,
+            liked=liked,
+            form=PostForm()
+        ),
         200,
     )
 
@@ -109,15 +121,98 @@ def view_post(id):
 @login_required
 def delete_post(id):
     get_post = UserPost.query.get(id)
-    if not get_post:
-        flash("Post not found", "danger")
-        return redirect(url_for("site.profile", id=current_user.id))
-    elif get_post.owner_user.id != current_user.id:
-        flash("Post not found", "danger")
-        return redirect(url_for("site.profile", id=current_user.id))
 
     db.session.delete(get_post)
     db.session.commit()
 
     flash("Post deleted", "success")
     return redirect(url_for("site.profile", id=current_user.id))
+
+
+@site.get("/post/<int:post_id>/like/")
+@login_required
+def like_post(post_id):
+    get_post = UserPost.query.get(post_id)
+    if not get_post or (get_post.draft and get_post.owner_user.id != current_user.id):
+        flash("Post not found", "danger")
+        return redirect(url_for("site.index"))
+
+    existing_like = UserPostLikes.query.filter_by(
+        user_id=current_user.id, post_id=post_id
+    ).first()
+    if existing_like:
+        flash("You have already liked this post", "info")
+        return redirect(url_for("site.view_post", id=post_id))
+
+    like_post = UserPostLikes(user_id=current_user.id, post_id=post_id)
+    db.session.add(like_post)
+
+    get_post.likes += 1
+    db.session.commit()
+
+    flash("Post liked", "success")
+    return redirect(url_for("site.view_post", id=post_id, _anchor="callout"))
+
+
+@site.get("/post/<int:post_id>/unlike/")
+@login_required
+def unlike_post(post_id):
+    get_post = UserPost.query.get(post_id)
+    if not get_post or (get_post.draft and get_post.owner_user.id != current_user.id):
+        flash("Post not found", "danger")
+        return redirect(url_for("site.index"))
+
+    existing_like = UserPostLikes.query.filter_by(
+        user_id=current_user.id, post_id=post_id
+    ).first()
+    if not existing_like:
+        flash("You have not liked this post", "info")
+        return redirect(url_for("site.view_post", id=post_id))
+
+    db.session.delete(existing_like)
+
+    get_post.likes -= 1
+    db.session.commit()
+
+    flash("Post unliked", "success")
+    return redirect(url_for("site.view_post", id=post_id, _anchor="callout"))
+
+
+#! not tested
+@site.get("/post/<int:post_id>/share/")
+@login_required
+def share_post(post_id):
+    get_post = UserPost.query.get(post_id)
+    if not get_post or (get_post.draft and get_post.owner_user.id != current_user.id):
+        flash("Post not found", "danger")
+        return redirect(url_for("site.index"))
+
+    get_post.shares += 1
+    db.session.commit()
+
+    flash("Post shared", "success")
+    return redirect(url_for("site.view_post", id=post_id, _anchor="callout"))
+
+
+@site.post("/post/<int:post_id>/comment/")
+@login_required
+def comment_post(post_id):
+    get_post = UserPost.query.get(post_id)
+    if not get_post or (get_post.draft):
+        return jsonify("Post not found"), 404
+
+    get_comment = CommentOnPostForm(request.form)
+    print(request.form)
+    if not get_comment.validate():
+        return jsonify("Invalid comment"), 400
+
+    save_comment = UserPostComments(
+        content=get_comment.content.data,
+        user_id=current_user.id,
+        post_id=post_id,
+    )
+    db.session.add(save_comment)
+    get_post.comments += 1
+    db.session.commit()
+
+    return jsonify("Post commented"), 201

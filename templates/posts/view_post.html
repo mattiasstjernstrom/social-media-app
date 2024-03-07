@@ -16,12 +16,34 @@
 </div>
 <div class="row m-3">
   <p style="white-space: pre-wrap">{{ post.content }}</p>
-  <div class="callout">
-    Published on {{ post.date_posted.strftime('%Y-%m-%d') }} at {{
+  <div class="callout" id="callout">
+    {% if liked %}
+    <a
+      href="{{ url_for('site.unlike_post', post_id=post.id) }}"
+      class="link-light"
+      >Unlike</a
+    >
+    {% else %}
+    <a
+      href="{{ url_for('site.like_post', post_id=post.id) }}"
+      class="link-light"
+      >Like</a
+    >
+    {% endif %} &middot; <span id="likes">{{ post.likes }}</span> {% if
+    post.likes == 1 %} like {% else %} likes {% endif %} {% if not
+    post.comments_disabled %} &middot;
+    <span id="comments">{{ post.comments }}</span>
+    {% if post.comments == 1 %} comment {% else %} comments {% endif %} {% endif
+    %} - Published on {{ post.date_posted.strftime('%Y-%m-%d') }} at {{
     post.date_posted.strftime('%H:%M') }} by {{ post.owner_user.username }}
   </div>
+  <input type="hidden" id="post_id" value="{{ post.id }}" name="post_id" />
   {% if post.comments_disabled %}
   <p class="comments-disabled-warning">Comments are disabled on this post.</p>
   {% else %} {% include "posts/view_comments.html" %} {% endif %}
 </div>
+{% endblock %}{% block scripts %} {{ super() }}
+<script src="{{ url_for('static', filename='js/post_comment.js') }}"></script>
+<script src="{{ url_for('static', filename='js/load_more_comments.js') }}"></script>
+
 {% endblock %}

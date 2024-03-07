@@ -72,3 +72,13 @@ class UserPostComments(db.Model):
 
     def __repr__(self):
         return f"UserPostComments('{self.user_id}', '{self.post_id}', '{self.date_commented}')"
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "post_id": self.post_id,
+            "content": self.content,
+            "date_commented": self.date_commented,
+            "date_edited": self.date_edited,
+        }

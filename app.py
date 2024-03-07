@@ -5,6 +5,7 @@ from flask_migrate import Migrate, upgrade
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_wtf.csrf import CSRFProtect
 
+from api import api
 from models.db import db
 from models.users import User, Role
 from models.posts import UserPost, UserPostLikes, UserPostShares, UserPostComments
@@ -34,6 +35,7 @@ bootstrap = Bootstrap5(app)
 # Blueprint registration
 app.register_blueprint(unauthenticated, url_prefix="/")
 app.register_blueprint(site, url_prefix="/")
+app.register_blueprint(api, url_prefix="/api")
 
 
 if __name__ == "__main__":

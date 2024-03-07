@@ -102,6 +102,8 @@
         </p>
       </footer>-->
     </div>
-    {% block scripts %} {{ bootstrap.load_js() }} {% endblock %}
+    {% block scripts %} {{ bootstrap.load_js() }}
+    <script src="{{url_for('static',filename='js/main.js')}}"></script>
+    {% endblock %}
   </body>
 </html>
