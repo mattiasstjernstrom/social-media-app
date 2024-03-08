@@ -34,7 +34,7 @@ This project leverages the following technologies:
 
 Your contributions are welcome! If you'd like to contribute to this project, please fork the repository and submit a pull request with your proposed changes. For major changes, please open an issue first to discuss what you would like to change.
 
-## To od
+## To do
 
 - **Nested comments**
 - **@Users:** Mentioning users
