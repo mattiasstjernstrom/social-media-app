@@ -1,0 +1,69 @@
+{% extends "base.html" %}{% block content %}
+<h1>{{ page_title }}</h1>
+<p>Welcome</p>
+<div class="row mx-1">Followes: {{ user.followers.count() }}</div>
+<div class="row mx-1">Following: {{ user.followed.count() }}</div>
+<div class="row mx-1">
+  <a href="{{ url_for('site.followers', user_id=user.id) }}">Followers</a>
+
+  {% if user.id == current_user.id %}
+  <div class="row mx-1">
+    <p class="lead">This is your profile</p>
+  </div>
+  {% endif %} {% if user.id != current_user.id %} {% if not is_following %}
+  <div class="row mx-1">
+    <a href="{{ url_for('site.follow_user', user_id=user.id) }}">Follow</a>
+  </div>
+  {% else %}
+  <div class="row mx-1">
+    <a href="{{ url_for('site.unfollow_user', user_id=user.id) }}">Unfollow</a>
+  </div>
+  {% endif %} {% endif %}
+
+  <div class="row">
+    <h2>{{ user.username }} Posts</h2>
+    {%for post in posts %}
+    <div class="row callout">
+      {% if post.splash_url != "" %}
+      <div class="col-3">
+        <div class="skeleton">
+          <a href="{{ url_for('site.view_post', id=post.id) }}">
+            <div
+              class="post-image"
+              style="background-image: url('{{ post.splash_url }}');"></div>
+          </a>
+        </div>
+      </div>
+      {% endif %}
+      <div class="col-8">
+        <h2>
+          <a
+            href="{{ url_for('site.view_post', id=post.id) }}"
+            class="post-title-link"
+            >{{ post.title }}</a
+          >
+        </h2>
+        <p
+          style="
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          ">
+          {{ post.content_truncated }}
+        </p>
+        <p>
+          Posted {{ post.humanized_date }} -
+          <a
+            href="{{ url_for('site.delete_post', id=post.id) }}"
+            class="link-danger"
+            >Delete</a
+          >
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endblock %} {% block scripts %} {{ super() }}
+  <script src="{{ url_for('static', filename='js/profile_page.js') }}"></script>
+  {% endblock %}
+</div>

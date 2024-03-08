@@ -1,0 +1,76 @@
+<div class="row py-3">
+  <form
+    action="/post/{{ post.id }}/comment"
+    method="post"
+    class="row g-3"
+    id="comment-form">
+    <h5>Leave a comment</h5>
+    {{ form.hidden_tag() }}
+    <textarea
+      class="form-control"
+      id="comment"
+      name="content"
+      rows="3"
+      minlength="1"
+      maxlength="1000"
+      placeholder="Your thoughts..."></textarea>
+  </form>
+
+  <div class="row p-3" id="comment-container">
+    {% if all_comments %} {% for comment in all_comments %}
+    <div class="row p-3">
+      <div class="col-1">
+        <img
+          src="https://via.placeholder.com/50"
+          alt="User"
+          class="img-fluid"
+          style="border-radius: 50%" />
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <strong class="card-title">
+              <a
+                href="{{ url_for('site.profile', id=comment.user_id) }}"
+                class="link-dark"
+                style="text-decoration: none"
+                >{{ comment.username }}</a
+              >
+            </strong>
+            says:
+            <p class="card-text">{{ comment.content }}</p>
+            <small>
+              {{ comment.date_humanized }} {% if comment.user_id ==
+              current_user.id %} &middot;
+              <a
+                href="{{ url_for('site.delete_comment', post_id=post.id, comment_id=comment.id) }}"
+                class="link-danger"
+                >Delete</a
+              >
+              {% endif %}
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="row p-3">
+    <div class="col text-center">
+      <button
+        id="load-more"
+        class="btn btn-sm btn-secondary fw-bold border-white bg-white d-none">
+        Load Older Comments
+      </button>
+    </div>
+  </div>
+  {% else %}
+  <div class="row p-3" id="comment-container">
+    <div class="row p-3" id="no-comments">
+      <div class="col">
+        <p>No comments yet</p>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
