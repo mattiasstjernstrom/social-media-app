@@ -1,5 +1,3 @@
-from collections.abc import Sequence
-from typing import Mapping
 from flask_wtf import FlaskForm
 from wtforms import (
     BooleanField,
@@ -9,6 +7,8 @@ from wtforms import (
 )
 from wtforms.validators import Optional, URL
 from flask_bootstrap import SwitchField
+from wtforms.validators import Regexp
+import regex
 
 
 class PostForm(FlaskForm):
@@ -36,6 +36,18 @@ class PostForm(FlaskForm):
         "Content",
         [validators.Length(min=10, max=10000), validators.DataRequired()],
         render_kw={"placeholder": "Your thoughts..."},
+    )
+    tags = StringField(
+        "Tags",
+        validators=[
+            Optional(),
+            validators.Length(min=2, max=100),
+            Regexp(
+                regex.compile(r"^[\p{L}\p{N}\-#-, ]+$", regex.UNICODE),
+                message="Only letters, numbers, and hyphens are allowed",
+            ),
+        ],
+        render_kw={"placeholder": "Music, Cats, Programming..."},
     )
     draft = SwitchField("Draft")
     friends_only = SwitchField("Friends Only")

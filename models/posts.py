@@ -104,3 +104,28 @@ class UserPostComments(db.Model):
             "date_commented": self.date_commented,
             "date_edited": self.date_edited,
         }
+
+
+class PostTags(db.Model):
+    __tablename__ = "post_tags"
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey("user_posts.id"))
+    tag_id = db.Column(db.Integer, db.ForeignKey("tags.id"))
+
+    def __repr__(self):
+        return f"PostTags('{self.post_id}', '{self.tag_id}')"
+
+
+class Tags(db.Model):
+    __tablename__ = "tags"
+    id = db.Column(db.Integer, primary_key=True)
+    tag = db.Column(db.String(100), nullable=False, unique=True)
+
+    def __repr__(self):
+        return f"Tags('{self.tag}')"
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "tag": self.tag,
+        }

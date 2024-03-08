@@ -1,12 +1,11 @@
 from flask import Blueprint, flash, render_template, request, redirect, url_for, jsonify
 from flask_login import current_user, login_required
-from sqlalchemy import func
 
 from api.comments import Comments
 from forms.post import PostForm
 from forms.comments import CommentOnPostForm
 from models.db import db
-from models.posts import UserPost, UserPostLikes, UserPostComments
+from models.posts import UserPost, UserPostLikes, UserPostComments, PostTags, Tags
 from models.users import User, Followers
 from models.check_likes import check_liked
 from modules.date_logics import humanize_time
@@ -34,16 +33,8 @@ def index():
 def profile(id):
     get_user = User.query.get(id)
     raw_posts = (
-        UserPost.query.with_entities(
-            UserPost.id,
-            UserPost.date_posted,
-            UserPost.title,
-            UserPost.splash_url,
-            func.left(UserPost.content, 150).label("content_truncated"),
-        )
-        .filter_by(user_id=id)
-        .order_by(UserPost.date_posted.desc())
-    ).all()
+        UserPost.query.filter_by(user_id=id).order_by(UserPost.date_posted.desc()).all()
+    )
 
     get_posts = []
     for post in raw_posts:
@@ -53,12 +44,11 @@ def profile(id):
             "humanized_date": humanize_time(post.date_posted),
             "title": post.title,
             "splash_url": post.splash_url,
-            "content_truncated": post.content_truncated,
+            "content": post.content,
         }
         get_posts.append(post_dict)
 
     is_following = FollowerLogics().check_following(current_user.id, id)
-
     context = {"page_title": "Profile", "is_following": is_following}
     return (
         render_template("user/profile.html", **context, user=get_user, posts=get_posts),
@@ -89,6 +79,25 @@ def post():
         db.session.add(save_post)
         db.session.commit()
 
+        split_post_tags = form.tags.data.split(",")
+        formatted_tag = [
+            tag.strip().lower().replace(" ", "-").replace("#", "")
+            for tag in split_post_tags
+        ]
+
+        for tag in formatted_tag:
+            get_tag = Tags.query.filter_by(tag=tag).first()
+            if not get_tag:
+                save_tag = Tags(tag=tag)
+                db.session.add(save_tag)
+                db.session.commit()
+
+        for tag in formatted_tag:
+            get_tag = Tags.query.filter_by(tag=tag).first()
+            save_post_tag = PostTags(post_id=save_post.id, tag_id=get_tag.id)
+            db.session.add(save_post_tag)
+            db.session.commit()
+
         flash("Post created", "success")
         return redirect(url_for("site.profile", id=current_user.id))
 
@@ -103,9 +112,16 @@ def view_post(id):
     if not get_post or (get_post.draft and get_post.owner_user.id != current_user.id):
         flash("Post not found", "danger")
         return redirect(url_for("site.index"))
+    post_tags = (
+        db.session.query(Tags)
+        .join(PostTags)
+        .filter(PostTags.post_id == id)
+        .order_by(Tags.tag.asc())
+        .all()
+    )
+    get_post.tags = [tag.tag for tag in post_tags]
 
     liked = check_liked(id)
-
     context = {
         "page_title": get_post.title,
     }
@@ -116,7 +132,7 @@ def view_post(id):
             post=get_post,
             all_comments=get_comments,
             liked=liked,
-            form=PostForm()
+            form=PostForm(),
         ),
         200,
     )
@@ -125,7 +141,15 @@ def view_post(id):
 @site.get("/post/<int:id>/delete/")
 @login_required
 def delete_post(id):
+    # get post and delete whit tags
+    get_tags = PostTags.query.filter_by(post_id=id).all()
+    for tag in get_tags:
+        db.session.delete(tag)
+
     get_post = UserPost.query.get(id)
+    if not get_post or get_post.owner_user.id != current_user.id:
+        flash("Post not found", "danger")
+        return redirect(url_for("site.index"))
 
     db.session.delete(get_post)
     db.session.commit()
@@ -301,5 +325,30 @@ def followers(user_id):
         render_template(
             "user/followers.html", **context, user=get_user, followers=followers_list
         ),
+        200,
+    )
+
+
+@site.route("/view-tag/<string:tag_name>")
+def view_tag(tag_name):
+    tag = Tags.query.filter_by(tag=tag_name).first()
+    if not tag:
+        flash("Tag not found", "danger")
+        return redirect(url_for("site.index"))
+
+    get_posts_with_tag = (
+        db.session.query(UserPost)
+        .join(PostTags)
+        .filter(PostTags.tag_id == tag.id)
+        .order_by(UserPost.date_posted.desc())
+        .all()
+    )
+
+    context = {
+        "page_title": f"Tag: {tag_name}",
+    }
+
+    return (
+        render_template("posts/view_tags.html", **context, posts=get_posts_with_tag),
         200,
     )

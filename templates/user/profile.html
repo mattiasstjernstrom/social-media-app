@@ -10,7 +10,7 @@
   <div class="row mx-1">
     <p class="lead">This is your profile</p>
   </div>
-  {% endif %} {% if user.id != current_user.id %} {% if not is_following %}
+  {% else %} {% if not is_following %}
   <div class="row mx-1">
     <a href="{{ url_for('site.follow_user', user_id=user.id) }}">Follow</a>
   </div>
@@ -22,7 +22,7 @@
 
   <div class="row">
     <h2>{{ user.username }} Posts</h2>
-    {%for post in posts %}
+    {% for post in posts %}
     <div class="row callout">
       {% if post.splash_url != "" %}
       <div class="col-3">
@@ -34,36 +34,32 @@
           </a>
         </div>
       </div>
-      {% endif %}
       <div class="col-8">
-        <h2>
-          <a
-            href="{{ url_for('site.view_post', id=post.id) }}"
-            class="post-title-link"
-            >{{ post.title }}</a
-          >
-        </h2>
-        <p
-          style="
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-          ">
-          {{ post.content_truncated }}
-        </p>
-        <p>
-          Posted {{ post.humanized_date }} -
-          <a
-            href="{{ url_for('site.delete_post', id=post.id) }}"
-            class="link-danger"
-            >Delete</a
-          >
-        </p>
+        {% else %}
+        <div>
+          {% endif %}
+          <h2>
+            <a
+              href="{{ url_for('site.view_post', id=post.id) }}"
+              class="post-title-link"
+              >{{ post.title }}</a
+            >
+          </h2>
+          <p>{{ post.content | truncate(120, False, "...") }}</p>
+          <p>
+            Posted {{ post.humanized_date }} -
+            <a
+              href="{{ url_for('site.delete_post', id=post.id) }}"
+              class="link-danger"
+              >Delete</a
+            >
+          </p>
+        </div>
       </div>
+      {% endfor %}
     </div>
-    {% endfor %}
+    {% endblock %} {% block scripts %} {{ super() }}
+    <script src="{{ url_for('static', filename='js/profile_page.js') }}"></script>
+    {% endblock %}
   </div>
-  {% endblock %} {% block scripts %} {{ super() }}
-  <script src="{{ url_for('static', filename='js/profile_page.js') }}"></script>
-  {% endblock %}
 </div>

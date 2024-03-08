@@ -1,0 +1,39 @@
+{% extends "base.html" %} {% block content %}
+<h1>{{ page_title }}</h1>
+
+{% for post in posts %}
+<div class="row callout">
+  {% if post.splash_url != "" %}
+  <div class="col-3">
+    <div class="skeleton">
+      <a href="{{ url_for('site.view_post', id=post.id) }}">
+        <div
+          class="post-image"
+          style="background-image: url('{{ post.splash_url }}');"></div>
+      </a>
+    </div>
+  </div>
+  <div class="col-8">
+    {% else %}
+    <div>
+      {% endif %}
+      <h2>
+        <a
+          href="{{ url_for('site.view_post', id=post.id) }}"
+          class="post-title-link"
+          >{{ post.title }}</a
+        >
+      </h2>
+      <p>{{ post.content | truncate(120, False, "...") }}</p>
+      <p>
+        Posted {{ post.humanized_date }} -
+        <a
+          href="{{ url_for('site.delete_post', id=post.id) }}"
+          class="link-danger"
+          >Delete</a
+        >
+      </p>
+    </div>
+  </div>
+  {% endfor %} {% endblock %}
+</div>

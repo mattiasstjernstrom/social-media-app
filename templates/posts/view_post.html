@@ -27,7 +27,21 @@
     <span id="comments">{{ post.comments }}</span>
     {% if post.comments == 1 %} comment {% else %} comments {% endif %} {% endif
     %} - Published on {{ post.date_posted.strftime('%Y-%m-%d') }} at {{
-    post.date_posted.strftime('%H:%M') }} by {{ post.owner_user.username }}
+    post.date_posted.strftime('%H:%M') }} by {{ post.owner_user.username }} {%
+    if post.tags %}
+    <ul
+      class="tags-list list-unstyled d-flex flex-wrap justify-content-start mt-3">
+      {% for tag in post.tags %}
+      <li class="me-2">
+        <a
+          href="{{ url_for('site.view_tag', tag_name=tag) }}"
+          class="badge rounded-pill bg-secondary pill-link"
+          >{{ tag }}</a
+        >
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
   </div>
   <input type="hidden" id="post_id" value="{{ post.id }}" name="post_id" />
   {% if post.comments_disabled %}
