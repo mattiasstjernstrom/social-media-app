@@ -38,7 +38,7 @@ Your contributions are welcome! If you'd like to contribute to this project, ple
 
 - **Nested comments**
 - **@Users:** Mentioning users
-- **Reuplode posts**
+- **Reupload posts**
 - **Trending post**
 
 ## License
