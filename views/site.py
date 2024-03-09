@@ -7,7 +7,7 @@ from forms.comments import CommentOnPostForm
 from models.db import db
 from models.posts import UserPost, UserPostLikes, UserPostComments, PostTags, Tags
 from models.users import User, Followers
-from models.check_likes import check_liked
+from modules.check_likes import check_liked
 from modules.date_logics import humanize_time
 from modules.follower_logics import FollowerLogics
 
