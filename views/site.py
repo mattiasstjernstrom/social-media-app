@@ -20,10 +20,23 @@ def index():
     context = {
         "page_title": "Welcome back!",
     }
+
+    # get top tags by counting them
+    top_tags = (
+        db.session.query(Tags.tag, db.func.count(PostTags.tag_id).label("total"))
+        .join(PostTags)
+        .group_by(Tags.tag)
+        .order_by(db.func.count(PostTags.tag_id).desc())
+        .limit(10)
+        .all()
+    )
+
     followers_posts = FollowerLogics().get_followers_posts()
 
     return (
-        render_template("index.html", **context, followers_posts=followers_posts),
+        render_template(
+            "index.html", **context, followers_posts=followers_posts, top_tags=top_tags
+        ),
         200,
     )
 

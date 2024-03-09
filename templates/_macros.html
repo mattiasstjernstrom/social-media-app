@@ -1,0 +1,18 @@
+{% macro truncate_text(text, length, post) %} {% if text|length > length %}<span
+  style="white-space: pre-wrap"
+  >{{ text|truncate(length, true, '...') }}</span
+>
+<a
+  href="{{ url_for('site.view_post', id=post.id)}}"
+  class="read-more btn btn-sm btn-secondary fw-bold border-white bg-white text-dark"
+  style="
+    display: block;
+    margin-top: 1rem;
+    width: 100px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  "
+  >Read more</a
+>{% else %}<span style="white-space: pre-wrap">{{ text }}</span>{% endif %}{%
+endmacro %}

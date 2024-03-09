@@ -1,50 +1,85 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} {% from "_macros.html" import truncate_text %} {%
+block content %}
 <h1>{{ page_title }}</h1>
 <h2>Feed</h2>
-{% for post in followers_posts %}
-<div class="post row">
-  <h1>
-    <a
-      href="{{ url_for('site.view_post', id=post.id) }}"
-      class="post-title-link"
-      >{{ post.title }}</a
-    >
-  </h1>
-  {% if post.splash_url %}
-  <div class="skeleton splash">
-    <div
-      class="front-post-image"
-      style="background-image: url('{{ post.splash_url }}');"></div>
-  </div>
-  {% endif %}
-  <div class="row">
-    {% if post.splash_caption and post.splash_url %}
-    <div class="col caption">{{ post.splash_caption }}</div>
-    {% endif %} {% if post.splash_credit and post.splash_url %}
-    <div class="col text-end credit">Photo by {{ post.splash_credit }}</div>
-    {% endif %}
-  </div>
-  <div class="row m-3">
-    <p style="white-space: pre-wrap">{{ post.content }}</p>
-    <div class="callout" id="callout">
-      {% if liked %}
-      <a href="{{ url_for('site.unlike_post', post_id=post.id) }}">Unlike</a>
-      {% else %}
-      <a href="{{ url_for('site.like_post', post_id=post.id) }}">Like</a>
-      {% endif %} &middot; <span id="likes">{{ post.likes }}</span> {% if
-      post.likes == 1 %} like {% else %} likes {% endif %} {% if not
-      post.comments_disabled %} &middot;
-      <a
-        href="{{
+<div class="row">
+  <div class="col-9">
+    {% for post in followers_posts %}
+    <div class="post row">
+      <h1>
+        <a
+          href="{{ url_for('site.view_post', id=post.id) }}"
+          class="post-title-link"
+          >{{ post.title }}</a
+        >
+      </h1>
+      {% if post.splash_url %}
+      <div class="skeleton splash">
+        <div
+          class="front-post-image"
+          style="background-image: url('{{ post.splash_url }}');"
+        ></div>
+      </div>
+      {% endif %}
+      <div class="row">
+        {% if post.splash_caption and post.splash_url %}
+        <div class="col caption">{{ post.splash_caption }}</div>
+        {% endif %} {% if post.splash_credit and post.splash_url %}
+        <div class="col text-end credit">Photo by {{ post.splash_credit }}</div>
+        {% endif %}
+      </div>
+      <div class="row m-3">
+        <p>{{ truncate_text(post.content, 500, post) }}</p>
+        <div class="callout" id="callout">
+          {% if liked %}
+          <a href="{{ url_for('site.unlike_post', post_id=post.id) }}"
+            >Unlike</a
+          >
+          {% else %}
+          <a href="{{ url_for('site.like_post', post_id=post.id) }}">Like</a>
+          {% endif %} &middot; <span id="likes">{{ post.likes }}</span> {% if
+          post.likes == 1 %} like {% else %} likes {% endif %} {% if not
+          post.comments_disabled %} &middot;
+          <a
+            href="{{
         url_for('site.view_post', id=post.id, _anchor='comments')
       }}"
-        ><span id="comments">{{ post.comments }}</span> {% if post.comments == 1
-        %} comment {% else %} comments {% endif %} {% endif %}</a
-      >
-      - Published on {{ post.date_posted.strftime('%Y-%m-%d') }} at {{
-      post.date_posted.strftime('%H:%M') }} by {{ post.owner_user.username }}
+            ><span id="comments">{{ post.comments }}</span> {% if post.comments
+            == 1 %} comment {% else %} comments {% endif %} {% endif %}</a
+          >
+          - Published on {{ post.date_posted.strftime('%Y-%m-%d') }} at {{
+          post.date_posted.strftime('%H:%M') }} by {{ post.owner_user.username
+          }}
+        </div>
+        <input
+          type="hidden"
+          id="post_id"
+          value="{{ post.id }}"
+          name="post_id"
+        />
+      </div>
     </div>
-    <input type="hidden" id="post_id" value="{{ post.id }}" name="post_id" />
+
+    {% endfor %}
+  </div>
+  <div class="col-3">
+    <h2>Top tags</h2>
+    <ol class="tags list-group list-group-numbered">
+      {% for tag in top_tags %}
+      <li
+        class="tag list-group-item d-flex justify-content-between align-items-start bg-dark text-light"
+      >
+        <div class="ms-2 me-auto">
+          <a href="{{ url_for('site.view_tag', tag_name=tag[0]) }}" class="tag"
+            >{{ tag[0] }}</a
+          >
+        </div>
+        <span class="tag-count badge bg-primary rounded-pill"
+          >{{ tag[1] }}</span
+        >
+      </li>
+      {% endfor %}
+    </ol>
   </div>
 </div>
-{% endfor %} {% endblock %}
+{% endblock %}
