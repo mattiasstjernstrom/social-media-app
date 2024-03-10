@@ -63,23 +63,65 @@ block content %}
     {% endfor %}
   </div>
   <div class="col-3">
-    <h2>Top tags</h2>
-    <ol class="tags list-group list-group-numbered">
-      {% for tag in top_tags %}
-      <li
-        class="tag list-group-item d-flex justify-content-between align-items-start bg-dark text-light"
-      >
-        <div class="ms-2 me-auto">
-          <a href="{{ url_for('site.view_tag', tag_name=tag[0]) }}" class="tag"
-            >{{ tag[0] }}</a
-          >
-        </div>
-        <span class="tag-count badge bg-primary rounded-pill"
-          >{{ tag[1] }}</span
+    <div class="mb-3">
+      <h2>Trending</h2>
+      <ol class="list-group list-group-numbered">
+        {% for post in trending_posts %}
+        <li
+          class="trending list-group-item d-flex justify-content-between align-items-start bg-dark text-light border-secondary"
         >
-      </li>
-      {% endfor %}
-    </ol>
+          <div class="ms-2 me-auto">
+            <a
+              href="{{ url_for('site.view_post', id=post.id) }}"
+              class="post-title-link"
+              >{{ post.title }}</a
+            >
+          </div>
+          <span class="badge bg-primary rounded-pill">{{ post.views }}</span>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+    <div class="mb-3">
+      <h2>Top tags</h2>
+      <ol class="tags list-group list-group-numbered">
+        {% for tag in top_tags %}
+        <li
+          class="tag list-group-item d-flex justify-content-between align-items-start bg-dark text-light border-secondary"
+        >
+          <div class="ms-2 me-auto">
+            <a
+              href="{{ url_for('site.view_tag', tag_name=tag[0]) }}"
+              class="post-title-link"
+              >{{ tag[0] }}</a
+            >
+          </div>
+          <span class="tag-count badge bg-primary rounded-pill"
+            >{{ tag[1] }}</span
+          >
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+    <div class="mt-3">
+      <h2>Top views</h2>
+      <ol class="list-group list-group-numbered">
+        {% for post in top_views %}
+        <li
+          class="views list-group-item d-flex justify-content-between align-items-start bg-dark text-light border-secondary"
+        >
+          <div class="ms-2 me-auto">
+            <a
+              href="{{ url_for('site.view_post', id=post.id) }}"
+              class="post-title-link"
+              >{{ post.title }}</a
+            >
+          </div>
+          <span class="badge bg-primary rounded-pill">{{ post.views }}</span>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
   </div>
 </div>
 {% endblock %}

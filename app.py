@@ -20,7 +20,7 @@ app.config.from_object("config.DevConfig")
 db.init_app(app)
 app.mail = Mail(app)
 
-app.context_processor(inject_title)
+app.context_processor(inject_config)
 app.before_request(is_logged_in)
 app.jinja_env.globals.update(is_active=is_active)
 csfr = CSRFProtect(app)

@@ -45,20 +45,7 @@
         <div>
           <h3 class="float-md-start mb-0">{{ title }}</h3>
           <nav class="nav nav-masthead justify-content-center float-md-end">
-            <a
-              class="nav-link {{ is_active('site.index') }}"
-              href="{{ url_for('site.index') }}"
-              >Home</a
-            >
-            <a class="nav-link" href="{{ url_for('site.post') }}">Write Post</a>
-            <a
-              class="nav-link {{ is_active('site.profile') }}"
-              href="{{ url_for('site.profile', id=current_user.id) }}"
-              class="nav-link"
-              >Profile ( {{ current_user.username }} )</a
-            >
-
-            <a class="nav-link" href="/logout">Logout</a>
+            {% include 'partials/_nav.html' %}
           </nav>
         </div>
       </header>

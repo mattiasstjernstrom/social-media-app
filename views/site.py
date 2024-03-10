@@ -1,11 +1,28 @@
-from flask import Blueprint, flash, render_template, request, redirect, url_for, jsonify
+from flask import (
+    Blueprint,
+    flash,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    jsonify,
+    session,
+)
 from flask_login import current_user, login_required
 
 from api.comments import Comments
+from api.trending import TrendingPosts
 from forms.post import PostForm
 from forms.comments import CommentOnPostForm
 from models.db import db
-from models.posts import UserPost, UserPostLikes, UserPostComments, PostTags, Tags
+from models.posts import (
+    UserPost,
+    UserPostLikes,
+    UserPostComments,
+    PostTags,
+    Tags,
+    PostViews,
+)
 from models.users import User, Followers
 from modules.check_likes import check_liked
 from modules.date_logics import humanize_time
@@ -21,21 +38,32 @@ def index():
         "page_title": "Welcome back!",
     }
 
-    # get top tags by counting them
     top_tags = (
         db.session.query(Tags.tag, db.func.count(PostTags.tag_id).label("total"))
         .join(PostTags)
         .group_by(Tags.tag)
         .order_by(db.func.count(PostTags.tag_id).desc())
-        .limit(10)
+        .limit(5)
         .all()
     )
+
+    top_views = (
+        db.session.query(UserPost).order_by(UserPost.post_views.desc()).limit(5).all()
+    )
+
+    trending_posts = TrendingPosts().load(5)
+
+    stats = {
+        "trending_posts": trending_posts,
+        "top_views": top_views,
+        "top_tags": top_tags,
+    }
 
     followers_posts = FollowerLogics().get_followers_posts()
 
     return (
         render_template(
-            "index.html", **context, followers_posts=followers_posts, top_tags=top_tags
+            "index.html", **context, followers_posts=followers_posts, **stats
         ),
         200,
     )
@@ -119,7 +147,29 @@ def post():
 
 @site.route("/post/<int:id>/")
 def view_post(id):
+    if current_user.is_authenticated:
+        check_view = PostViews.query.filter_by(
+            post_id=id, user_id=current_user.id
+        ).first()
+        if not check_view:
+            save_view = PostViews(post_id=id, user_id=current_user.id)
+            db.session.add(save_view)
+            db.session.commit()
+    else:
+        unauth_id = session["unauth"]
+        check_view = PostViews.query.filter_by(
+            post_id=id, unauthorized_id=unauth_id
+        ).first()
+        if not check_view:
+            save_view = PostViews(post_id=id, unauthorized_id=unauth_id)
+            db.session.add(save_view)
+            db.session.commit()
+
     get_post = UserPost.query.get(id)
+    if get_post.post_views is None:
+        get_post.post_views = 0
+    get_post.post_views += 1
+    db.session.commit()
     get_comments = Comments().load(id)
 
     if not get_post or (get_post.draft and get_post.owner_user.id != current_user.id):

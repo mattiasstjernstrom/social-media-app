@@ -4,7 +4,8 @@
 <div class="skeleton splash">
   <div
     class="big-post-image"
-    style="background-image: url('{{ post.splash_url }}');"></div>
+    style="background-image: url('{{ post.splash_url }}');"
+  ></div>
 </div>
 {% endif %}
 <div class="row">
@@ -30,7 +31,8 @@
     post.date_posted.strftime('%H:%M') }} by {{ post.owner_user.username }} {%
     if post.tags %}
     <ul
-      class="tags-list list-unstyled d-flex flex-wrap justify-content-start mt-3">
+      class="tags-list list-unstyled d-flex flex-wrap justify-content-start mt-3"
+    >
       {% for tag in post.tags %}
       <li class="me-2">
         <a
@@ -45,7 +47,9 @@
   </div>
   <input type="hidden" id="post_id" value="{{ post.id }}" name="post_id" />
   {% if post.comments_disabled %}
-  <p class="comments-disabled-warning">Comments are disabled on this post.</p>
+  <p class="comments-disabled-warning" id="no-comments">
+    Comments are disabled on this post.
+  </p>
   {% else %} {% include "posts/view_comments.html" %} {% endif %}
 </div>
 {% endblock %}{% block scripts %} {{ super() }}

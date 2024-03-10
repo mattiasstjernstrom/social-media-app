@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from api.comments import Comments
 from api.posts import Posts
+from api.trending import TrendingPosts
 
 api = Blueprint("api", __name__)
 
@@ -30,3 +31,10 @@ def get_feed_posts():
     limit = request.args.get("limit", 10, type=int)
     offset = request.args.get("offset", 0, type=int)
     return Posts().get_feed_post(limit, offset), 201
+
+
+@api.get("/trending_posts/")
+def get_trending_posts():
+    limit = request.args.get("limit", 10, type=int)
+    offset = request.args.get("offset", 0, type=int)
+    return TrendingPosts().load_toJSON(limit, offset), 201

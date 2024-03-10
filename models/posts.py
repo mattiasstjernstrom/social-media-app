@@ -18,6 +18,7 @@ class UserPost(db.Model):
     followers_only = db.Column(db.Boolean, default=False)
     likes = db.Column(db.Integer, default=0)
     shares = db.Column(db.Integer, default=0)
+    post_views = db.Column(db.Integer, default=0)
     comments = db.Column(db.Integer, default=0)
     comments_disabled = db.Column(db.Boolean, default=False)
 
@@ -31,6 +32,10 @@ class UserPost(db.Model):
     )
     user_post_comments = db.relationship(
         "UserPostComments", backref="user_post_comments", lazy=True
+    )
+    user_post_views = db.relationship("PostViews", backref="user_post_views", lazy=True)
+    unauthorized_views = db.relationship(
+        "PostViews", backref="unauthorized_views", lazy=True
     )
 
     def __repr__(self):
@@ -129,3 +134,15 @@ class Tags(db.Model):
             "id": self.id,
             "tag": self.tag,
         }
+
+
+class PostViews(db.Model):
+    __tablename__ = "post_views"
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey("user_posts.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    unauthorized_id = db.Column(db.Integer, nullable=True)
+    date_viewed = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"PostViews('{self.post_id}', '{self.user_id}', '{self.date_viewed}')"
