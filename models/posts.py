@@ -35,7 +35,10 @@ class UserPost(db.Model):
     )
     user_post_views = db.relationship("PostViews", backref="user_post_views", lazy=True)
     unauthorized_views = db.relationship(
-        "PostViews", backref="unauthorized_views", lazy=True
+        "PostViews",
+        backref="unauthorized_views",
+        lazy=True,
+        overlaps="user_post_views,user_post_views",
     )
 
     def __repr__(self):
