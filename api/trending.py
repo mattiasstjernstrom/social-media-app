@@ -33,9 +33,42 @@ class TrendingPosts:
                 total_comments_dict[comment.post_id] = 1
 
         trending_posts = []
-        for post in UserPost.query.filter(
-            UserPost.date_posted > (datetime.now() - timedelta(days=7))
-        ).all():
+        additional_posts_needed = limit
+
+        latest_posts = (
+            UserPost.query.filter(
+                UserPost.date_posted > datetime.now() - timedelta(days=3)
+            )
+            .order_by(UserPost.date_posted.desc())
+            .limit(limit)
+            .all()
+        )
+        for post in latest_posts:
+            if (
+                post_views_dict.get(post.id, 0) == 0
+                or post_likes_dict.get(post.id, 0) == 0
+            ):
+                latest_posts.remove(post)
+
+        if len(latest_posts) < limit:
+            additional_posts_needed = limit - len(latest_posts)
+
+            excluded_post_ids = [post.id for post in latest_posts]
+            additional_posts = (
+                UserPost.query.filter(
+                    UserPost.id.notin_(excluded_post_ids),
+                    UserPost.date_posted <= datetime.now() - timedelta(days=1),
+                )
+                .order_by(UserPost.date_posted.desc())
+                .limit(additional_posts_needed)
+                .all()
+            )
+
+            combined_posts = latest_posts + additional_posts
+        else:
+            combined_posts = latest_posts
+
+        for post in combined_posts:
             post_owner = User.query.get(post.user_id)
             post_dict = {
                 "id": post.id,
@@ -48,6 +81,7 @@ class TrendingPosts:
             for key, value in post_owner.to_dict().items():
                 if key in ["username", "active"]:
                     post_dict[key] = value
+
             trending_posts.append(post_dict)
 
         for post in trending_posts:
@@ -60,7 +94,11 @@ class TrendingPosts:
                 + 1000 * 0.2
             )
 
+            if post["date_posted"] > datetime.now() - timedelta(hours=3):
+                post["new"] = "Featured"
+
         trending_posts.sort(key=lambda x: x["score"], reverse=True)
+
         return trending_posts[offset : offset + limit]
 
     def load_toJSON(self, limit, offset):

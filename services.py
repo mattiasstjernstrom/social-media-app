@@ -6,6 +6,13 @@ from random import randint
 
 # check if user is logged in and redirect to the correct page
 def is_logged_in():
+    # TODO; GDPR compliance
+    if not current_user.is_authenticated and not "session_id" in session:
+        timestamp = datetime.now().timestamp()
+
+        session["session_id"] = int(
+            timestamp + randint(111, 999)
+        )  # If high load on site, change to higher number
     if (
         request.path == url_for("unauthenticated.sign_in")
         and current_user.is_authenticated
@@ -17,11 +24,6 @@ def is_logged_in():
 
 # Global config
 def inject_config():
-    # TODO; GDPR compliance
-    if not current_user.is_authenticated and "unauth" not in session:
-        session["unauth"] = randint(
-            111, 999
-        )  # If high load on site, change to higher number
     return {"title": "StjernSocial"}  # Change to logic for name
 
 

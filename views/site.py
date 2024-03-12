@@ -1,3 +1,4 @@
+from random import randint
 from flask import (
     Blueprint,
     flash,
@@ -46,6 +47,11 @@ def index():
         .limit(5)
         .all()
     )
+
+    # Add k to the total if it's over 999
+    top_tags = [
+        (tag, f"{total // 1000}k" if total > 999 else total) for tag, total in top_tags
+    ]
 
     top_views = (
         db.session.query(UserPost).order_by(UserPost.post_views.desc()).limit(5).all()
@@ -125,6 +131,7 @@ def post():
             tag.strip().lower().replace(" ", "-").replace("#", "")
             for tag in split_post_tags
         ]
+        formatted_tag = [tag for tag in formatted_tag if tag]
 
         for tag in formatted_tag:
             get_tag = Tags.query.filter_by(tag=tag).first()
@@ -156,7 +163,8 @@ def view_post(id):
             db.session.add(save_view)
             db.session.commit()
     else:
-        unauth_id = session["unauth"]
+        unauth_id = session.get("session_id")
+        print(unauth_id, type(unauth_id))
         check_view = PostViews.query.filter_by(
             post_id=id, unauthorized_id=unauth_id
         ).first()
