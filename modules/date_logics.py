@@ -6,15 +6,15 @@ def humanize_time(dt):
     diff = now - dt
 
     if diff < timedelta(minutes=1):
-        return "a moment ago"
+        return "A moment ago"
     elif diff < timedelta(hours=1):
         return f"{int(diff.total_seconds() / 60)} minutes ago"
     elif diff < timedelta(hours=2):
-        return "one hour ago"
+        return "One hour ago"
     elif diff < timedelta(days=1):
         return f"{int(diff.total_seconds() / 3600)} hours ago"
     elif diff < timedelta(days=2):
-        return "yesterday"
+        return "Yesterday"
     elif diff < timedelta(days=365):
         return dt.strftime("%B %d")
     else:

@@ -48,9 +48,12 @@ def index():
         .all()
     )
 
+    #! add fake 1000 tag for test
+    top_tags.append(("Fake", 1000))
+
     # Add k to the total if it's over 999
     top_tags = [
-        (tag, f"{total // 1000}k" if total > 999 else total) for tag, total in top_tags
+        (tag, f"{total // 1000}k+" if total > 999 else total) for tag, total in top_tags
     ]
 
     top_views = (
@@ -115,6 +118,8 @@ def post():
         save_post = UserPost(
             title=form.title.data,
             splash_url=form.splash_url.data,
+            splash_caption=form.splash_caption.data,
+            spalsh_credit=form.splash_credit.data,
             content=form.content.data,
             draft=form.draft.data,
             friends_only=form.friends_only.data,
@@ -164,7 +169,6 @@ def view_post(id):
             db.session.commit()
     else:
         unauth_id = session.get("session_id")
-        print(unauth_id, type(unauth_id))
         check_view = PostViews.query.filter_by(
             post_id=id, unauthorized_id=unauth_id
         ).first()

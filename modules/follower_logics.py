@@ -8,6 +8,7 @@ from models.users import Followers
 from models.db import db
 from models.posts import UserPost
 from sqlalchemy import or_, select
+from modules.date_logics import humanize_time
 
 
 class FollowerLogics:
@@ -45,4 +46,8 @@ class FollowerLogics:
             .offset(offset)
             .all()
         )
+
+        for post in posts:
+            post.humanized_time = humanize_time(post.date_posted)
+
         return posts

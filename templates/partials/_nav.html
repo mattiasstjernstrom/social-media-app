@@ -9,7 +9,8 @@
   class="nav-link {{ is_active('site.profile') }}"
   href="{{ url_for('site.profile', id=current_user.id) }}"
   class="nav-link"
-  >Profile ( {{ current_user.username }} )</a
+  >Profile
+  <!-- ( {{ current_user.username }} ) --></a
 >
 
 <a class="nav-link" href="/logout">Logout</a>

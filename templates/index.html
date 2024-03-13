@@ -1,127 +1,123 @@
 {% extends "base.html" %} {% from "_macros.html" import truncate_text %} {%
-block content %}
-<h1>{{ page_title }}</h1>
-<h2>Feed</h2>
-<div class="row">
-  <div class="col-9">
-    {% for post in followers_posts %}
-    <div class="post row">
-      <h1>
-        <a
-          href="{{ url_for('site.view_post', id=post.id) }}"
-          class="post-title-link"
-          >{{ post.title }}</a
-        >
-      </h1>
-      {% if post.splash_url %}
-      <div class="skeleton splash">
-        <div
-          class="front-post-image"
-          style="background-image: url('{{ post.splash_url }}');"
-        ></div>
-      </div>
-      {% endif %}
-      <div class="row">
-        {% if post.splash_caption and post.splash_url %}
-        <div class="col caption">{{ post.splash_caption }}</div>
-        {% endif %} {% if post.splash_credit and post.splash_url %}
-        <div class="col text-end credit">Photo by {{ post.splash_credit }}</div>
-        {% endif %}
-      </div>
-      <div class="row m-3">
-        <p>{{ truncate_text(post.content, 500, post) }}</p>
-        <div class="callout" id="callout">
-          {% if liked %}
-          <a href="{{ url_for('site.unlike_post', post_id=post.id) }}"
-            >Unlike</a
-          >
-          {% else %}
-          <a href="{{ url_for('site.like_post', post_id=post.id) }}">Like</a>
-          {% endif %} &middot; <span id="likes">{{ post.likes }}</span> {% if
-          post.likes == 1 %} like {% else %} likes {% endif %} {% if not
-          post.comments_disabled %} &middot;
-          <a
-            href="{{
+block content %} {% for post in followers_posts %}
+<div class="row mb-3" style="border: #eee 1px solid"></div>
+<div class="post">
+  <p>
+    <img
+      src="https://placehold.co/25"
+      alt="User"
+      class="img-fluid"
+      style="border-radius: 50%; margin-right: 8px"
+      width="25 px"
+    />
+    {{ post.owner_user.username }} &middot; {{ post.humanized_time }}
+  </p>
+  {% if post.splash_url %}
+  <div class="skeleton splash">
+    <div
+      class="front-post-image"
+      style="background-image: url('{{ post.splash_url }}');"
+    >
+      <a
+        href="{{ url_for('site.view_post', id=post.id) }}"
+        class="post-title-link"
+        >{{ post.title }}</a
+      >
+    </div>
+  </div>
+  {% endif %}
+  <div class="row">
+    {% if post.splash_caption and post.splash_url %}
+    <div class="col caption">{{ post.splash_caption }}</div>
+    {% endif %} {% if post.splash_credit and post.splash_url %}
+    <div class="col text-end credit">Photo by {{ post.splash_credit }}</div>
+    {% endif %}
+  </div>
+  <div class="post-text">
+    <p>{{ truncate_text(post.content, 500, post) }}</p>
+    <div>
+      {% if liked %}
+      <a href="{{ url_for('site.unlike_post', post_id=post.id) }}">Unlike</a>
+      {% else %}
+      <a href="{{ url_for('site.like_post', post_id=post.id) }}">Like</a>
+      {% endif %} &middot; <span id="likes">{{ post.likes }}</span> {% if
+      post.likes == 1 %} like {% else %} likes {% endif %} {% if not
+      post.comments_disabled %} &middot;
+      <a
+        href="{{
         url_for('site.view_post', id=post.id, _anchor='comments')
       }}"
-            ><span id="comments">{{ post.comments }}</span> {% if post.comments
-            == 1 %} comment {% else %} comments {% endif %} {% endif %}</a
-          >
-          - Published on {{ post.date_posted.strftime('%Y-%m-%d') }} at {{
-          post.date_posted.strftime('%H:%M') }} by {{ post.owner_user.username
-          }}
-        </div>
-        <input
-          type="hidden"
-          id="post_id"
-          value="{{ post.id }}"
-          name="post_id"
-        />
-      </div>
+        ><span id="comments">{{ post.comments }}</span> {% if post.comments == 1
+        %} comment {% else %} comments {% endif %} {% endif %}</a
+      >
+      - Published on {{ post.date_posted.strftime('%Y-%m-%d') }} at {{
+      post.date_posted.strftime('%H:%M') }}
     </div>
-
-    {% endfor %}
+    <input type="hidden" id="post_id" value="{{ post.id }}" name="post_id" />
   </div>
-  <div class="col-3">
-    <div class="mb-3">
-      <h2>Trending</h2>
-      <ol class="list-group list-group-numbered">
-        {% for post in trending_posts %}
-        <li
-          class="trending list-group-item d-flex justify-content-between align-items-start bg-dark text-light border-secondary"
-        >
-          <div class="ms-2 me-auto">
-            <a
-              href="{{ url_for('site.view_post', id=post.id) }}"
-              class="post-title-link"
-              >{{ post.title }}</a
-            >
-          </div>
-          <span class="badge bg-primary rounded-pill">{{ post.new }}</span>
-        </li>
-        {% endfor %}
-      </ol>
-    </div>
-    <div class="mb-3">
-      <h2>Top tags</h2>
-      <ol class="tags list-group list-group-numbered">
-        {% for tag in top_tags %}
-        <li
-          class="tag list-group-item d-flex justify-content-between align-items-start bg-dark text-light border-secondary"
-        >
-          <div class="ms-2 me-auto">
-            <a
-              href="{{ url_for('site.view_tag', tag_name=tag[0]) }}"
-              class="post-title-link"
-              >{{ tag[0] }}</a
-            >
-          </div>
-          <span class="tag-count badge bg-primary rounded-pill"
-            >{{ tag[1] }}</span
+</div>
+
+{% endfor %}
+
+<div class="row">
+  <div class="mb-3">
+    <h2>Trending</h2>
+    <ol class="list-group list-group-numbered">
+      {% for post in trending_posts %}
+      <li
+        class="trending list-group-item d-flex justify-content-between align-items-start"
+      >
+        <div class="ms-2 me-auto">
+          <a
+            href="{{ url_for('site.view_post', id=post.id) }}"
+            class="post-title-link"
+            >{{ post.title }}</a
           >
-        </li>
-        {% endfor %}
-      </ol>
-    </div>
-    <div class="mt-3">
-      <h2>Top views</h2>
-      <ol class="list-group list-group-numbered">
-        {% for post in top_views %}
-        <li
-          class="views list-group-item d-flex justify-content-between align-items-start bg-dark text-light border-secondary"
+        </div>
+        <span class="badge bg-primary rounded-pill">{{ post.new }}</span>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+  <div class="mb-3">
+    <h2>Top tags</h2>
+    <ol class="tags list-group list-group-numbered">
+      {% for tag in top_tags %}
+      <li
+        class="tag list-group-item d-flex justify-content-between align-items-start"
+      >
+        <div class="ms-2 me-auto">
+          <a
+            href="{{ url_for('site.view_tag', tag_name=tag[0]) }}"
+            class="post-title-link"
+            >{{ tag[0] }}</a
+          >
+        </div>
+        <span class="tag-count badge bg-primary rounded-pill"
+          >{{ tag[1] }}</span
         >
-          <div class="ms-2 me-auto">
-            <a
-              href="{{ url_for('site.view_post', id=post.id) }}"
-              class="post-title-link"
-              >{{ post.title }}</a
-            >
-          </div>
-          <span class="badge bg-primary rounded-pill">{{ post.views }}</span>
-        </li>
-        {% endfor %}
-      </ol>
-    </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+  <div class="mt-3">
+    <h2>Top views</h2>
+    <ol class="list-group list-group-numbered">
+      {% for post in top_views %}
+      <li
+        class="views list-group-item d-flex justify-content-between align-items-start"
+      >
+        <div class="ms-2 me-auto">
+          <a
+            href="{{ url_for('site.view_post', id=post.id) }}"
+            class="post-title-link"
+            >{{ post.title }}</a
+          >
+        </div>
+        <span class="badge bg-primary rounded-pill">{{ post.views }}</span>
+      </li>
+      {% endfor %}
+    </ol>
   </div>
 </div>
 {% endblock %}

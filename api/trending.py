@@ -95,7 +95,7 @@ class TrendingPosts:
             )
 
             if post["date_posted"] > datetime.now() - timedelta(hours=3):
-                post["new"] = "Featured"
+                post["new"] = "HOT"
 
         trending_posts.sort(key=lambda x: x["score"], reverse=True)
 
