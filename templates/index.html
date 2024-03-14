@@ -1,16 +1,53 @@
 {% extends "base.html" %} {% from "_macros.html" import truncate_text %} {%
-block content %} {% for post in followers_posts %}
-<div class="row mb-3" style="border: #eee 1px solid"></div>
-<div class="post">
+block content %}
+<ul class="nav nav-tabs mb-2">
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="#">For you</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">What's hot</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">New</a>
+  </li>
+  <li class="nav-item dropdown">
+    <a
+      class="nav-link dropdown-toggle"
+      data-bs-toggle="dropdown"
+      href="#"
+      role="button"
+      aria-expanded="false"
+      >Dropdown</a
+    >
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="#">Action</a></li>
+      <li><a class="dropdown-item" href="#">Another action</a></li>
+      <li><a class="dropdown-item" href="#">Something else here</a></li>
+      <li><hr class="dropdown-divider" /></li>
+      <li><a class="dropdown-item" href="#">Separated link</a></li>
+    </ul>
+  </li>
+</ul>
+{% for post in followers_posts %}
+<div class="post mt-3">
   <p>
-    <img
-      src="https://placehold.co/25"
-      alt="User"
-      class="img-fluid"
-      style="border-radius: 50%; margin-right: 8px"
-      width="25 px"
-    />
-    {{ post.owner_user.username }} &middot; {{ post.humanized_time }}
+    <a
+      href="{{ url_for('site.profile', id=post.owner_user.id) }}"
+      class="link-dark text-decoration-none"
+    >
+      <img
+        src="https://placehold.co/25"
+        alt="User"
+        class="img-fluid"
+        style="border-radius: 50%; margin-right: 8px"
+        width="25 px"
+      />
+      {{ post.owner_user.username }}
+      <i class="bi bi-patch-check" style="color: #b93be8"></i>
+    </a>
+    <span class="text-muted text-lowercase">
+      &middot; {{ post.humanized_time }}</span
+    >
   </p>
   {% if post.splash_url %}
   <div class="skeleton splash">
@@ -35,89 +72,95 @@ block content %} {% for post in followers_posts %}
   </div>
   <div class="post-text">
     <p>{{ truncate_text(post.content, 500, post) }}</p>
-    <div>
-      {% if liked %}
-      <a href="{{ url_for('site.unlike_post', post_id=post.id) }}">Unlike</a>
-      {% else %}
-      <a href="{{ url_for('site.like_post', post_id=post.id) }}">Like</a>
-      {% endif %} &middot; <span id="likes">{{ post.likes }}</span> {% if
-      post.likes == 1 %} like {% else %} likes {% endif %} {% if not
-      post.comments_disabled %} &middot;
-      <a
-        href="{{
-        url_for('site.view_post', id=post.id, _anchor='comments')
-      }}"
-        ><span id="comments">{{ post.comments }}</span> {% if post.comments == 1
-        %} comment {% else %} comments {% endif %} {% endif %}</a
-      >
-      - Published on {{ post.date_posted.strftime('%Y-%m-%d') }} at {{
-      post.date_posted.strftime('%H:%M') }}
+    <div style="display: flex; gap: 15px">
+      <span class="text-muted">
+        {%if post.liked %}
+        <a href="{{ url_for('site.unlike_post', post_id=post.id) }}"
+          ><i class="bi bi-heart-fill"></i
+        ></a>
+        {% else %}
+        <a href="{{ url_for('site.like_post', post_id=post.id) }}"
+          ><i class="bi bi-heart" style="color: #bbb"></i
+        ></a>
+        {% endif %} {% if not post.comments_disabled %}<span id="likes"
+          >{{ post.likes }} like{% if not post.likes == 1%}s{% endif %}</span
+        >
+        {% endif %}
+      </span>
+
+      {% if not post.comments_disabled %}
+      <span class="text-muted">
+        <a href="{{ url_for('site.view_post', id=post.id) }}"
+          ><i
+            class="bi bi-chat-dots{% if not post.comments == 0 %}-fill{% endif %}"
+            style="color: #bbb"
+          ></i
+        ></a>
+        <span id="comments"
+          >{{ post.comments }} comment{% if not post.comments == 1 %}s{% endif
+          %}</span
+        >
+      </span>
+      {% endif %}
+      <span span="text-muted" style="margin-left: auto; padding-right: 0.5rem">
+        <a href="#"><i class="bi bi-three-dots" style="color: #bbb"></i></a>
+      </span>
     </div>
     <input type="hidden" id="post_id" value="{{ post.id }}" name="post_id" />
   </div>
 </div>
-
+<div class="row mb-3" style="border: #eee 1px solid"></div>
 {% endfor %}
 
-<div class="row">
-  <div class="mb-3">
-    <h2>Trending</h2>
-    <ol class="list-group list-group-numbered">
-      {% for post in trending_posts %}
-      <li
-        class="trending list-group-item d-flex justify-content-between align-items-start"
-      >
-        <div class="ms-2 me-auto">
-          <a
-            href="{{ url_for('site.view_post', id=post.id) }}"
-            class="post-title-link"
-            >{{ post.title }}</a
-          >
-        </div>
-        <span class="badge bg-primary rounded-pill">{{ post.new }}</span>
-      </li>
-      {% endfor %}
-    </ol>
-  </div>
-  <div class="mb-3">
-    <h2>Top tags</h2>
-    <ol class="tags list-group list-group-numbered">
-      {% for tag in top_tags %}
-      <li
-        class="tag list-group-item d-flex justify-content-between align-items-start"
-      >
-        <div class="ms-2 me-auto">
-          <a
-            href="{{ url_for('site.view_tag', tag_name=tag[0]) }}"
-            class="post-title-link"
-            >{{ tag[0] }}</a
-          >
-        </div>
-        <span class="tag-count badge bg-primary rounded-pill"
-          >{{ tag[1] }}</span
+<div class="mb-3">
+  <h2>Trending</h2>
+  <ol class="list-group list-group-numbered">
+    {% for post in trending_posts %}
+    <li
+      class="trending list-group-item d-flex justify-content-between align-items-start"
+    >
+      <div class="ms-2 me-auto">
+        <a href="{{ url_for('site.view_post', id=post.id) }}"
+          >{{ post.title }}</a
         >
-      </li>
-      {% endfor %}
-    </ol>
-  </div>
-  <div class="mt-3">
-    <h2>Top views</h2>
-    <ol class="list-group list-group-numbered">
-      {% for post in top_views %}
-      <li
-        class="views list-group-item d-flex justify-content-between align-items-start"
-      >
-        <div class="ms-2 me-auto">
-          <a
-            href="{{ url_for('site.view_post', id=post.id) }}"
-            class="post-title-link"
-            >{{ post.title }}</a
-          >
-        </div>
-        <span class="badge bg-primary rounded-pill">{{ post.views }}</span>
-      </li>
-      {% endfor %}
-    </ol>
-  </div>
+      </div>
+      <span class="badge bg-primary rounded-pill">{{ post.new }}</span>
+    </li>
+    {% endfor %}
+  </ol>
+</div>
+<div class="mb-3">
+  <h2>Top tags</h2>
+  <ol class="tags list-group list-group-numbered">
+    {% for tag in top_tags %}
+    <li
+      class="tag list-group-item d-flex justify-content-between align-items-start"
+    >
+      <div class="ms-2 me-auto">
+        <a href="{{ url_for('site.view_tag', tag_name=tag[0]) }}"
+          >{{ tag[0] }}</a
+        >
+      </div>
+      <span class="tag-count badge bg-primary rounded-pill">{{ tag[1] }}</span>
+    </li>
+    {% endfor %}
+  </ol>
+</div>
+<div class="mt-3">
+  <h2>Top views</h2>
+  <ol class="list-group list-group-numbered">
+    {% for post in top_views %}
+    <li
+      class="views list-group-item d-flex justify-content-between align-items-start"
+    >
+      <div class="ms-2 me-auto">
+        <a href="{{ url_for('site.view_post', id=post.id) }}"
+          >{{ post.title }}</a
+        >
+      </div>
+      <span class="badge bg-primary rounded-pill">{{ post.views }}</span>
+    </li>
+    {% endfor %}
+  </ol>
 </div>
 {% endblock %}

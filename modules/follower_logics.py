@@ -9,6 +9,7 @@ from models.db import db
 from models.posts import UserPost
 from sqlalchemy import or_, select
 from modules.date_logics import humanize_time
+from modules.check_likes import check_liked
 
 
 class FollowerLogics:
@@ -49,5 +50,6 @@ class FollowerLogics:
 
         for post in posts:
             post.humanized_time = humanize_time(post.date_posted)
+            post.liked = check_liked(post.id)
 
         return posts

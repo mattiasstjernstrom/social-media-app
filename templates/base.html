@@ -21,29 +21,27 @@
     {% endblock %}
   </head>
   <body>
-    <header class="container navbar navbar-expand-lg">
-      <div class="container-fluid">
-        <div class="d-flex flex-row">
-          <a class="navbar-brand navbar" href="#">
-            <img
-              src="{{ url_for('static', filename='images/stjernlogga-temp.png') }}"
-              alt="Stjernapps"
-              width="60"
-            />
-            <div class="d-flex flex-column p-2 pt-0 pb-0">
-              <h1 class="mb-1" style="font-size: 1.5rem">StjernSocial</h1>
-              <p class="mb-1" style="font-size: 1rem">A Social Site</p>
-            </div>
-          </a>
-        </div>
-
-        <nav
-          class="nav nav-masthead justify-content-center float-md-end"
-          style="background-color: #eee; border-radius: 5px; padding: 5px"
-        >
+    <header class="container">
+      <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+          <div class="d-flex flex-row">
+            <a class="navbar-brand navbar" href="#">
+              <img
+                src="{{ url_for('static', filename='images/stjernlogga-temp.png') }}"
+                alt="Stjernapps"
+                width="60"
+              />
+              <div class="d-flex flex-column p-2 pt-0 pb-0">
+                <h1 class="mb-1" style="font-size: 1.5rem">StjernSocial</h1>
+                <p class="mb-1" style="font-size: 1rem">
+                  A Social Article Site
+                </p>
+              </div>
+            </a>
+          </div>
           {% include 'partials/_nav.html' %}
-        </nav>
-      </div>
+        </div>
+      </nav>
     </header>
     <section class="flash-messages mx-auto">
       {% with messages = get_flashed_messages(with_categories=true) %} {% if

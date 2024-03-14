@@ -4,16 +4,9 @@
 >
 <a
   href="{{ url_for('site.view_post', id=post.id)}}"
-  class="read-more btn btn-sm btn-primary fw-bold link-light"
-  style="
-    display: block;
-    margin-top: 1rem;
-    max-width: 200px;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-  "
+  class="read-more"
+  style="display: block; margin-top: 1rem"
 >
-  Continue Reading &rarr; </a
+  Read Full Story &rarr; </a
 >{% else %}<span style="white-space: pre-wrap">{{ text }}</span>{% endif %}{%
 endmacro %}
