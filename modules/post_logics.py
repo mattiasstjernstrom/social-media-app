@@ -53,3 +53,21 @@ class FollowerLogics:
             post.liked = check_liked(post.id)
 
         return posts
+
+
+class ProfileLogics:
+    def get_user_posts(self, user_id, limit=10, offset=0):
+        posts = (
+            db.session.query(UserPost)
+            .filter(UserPost.user_id == user_id)
+            .order_by(UserPost.date_posted.desc())
+            .limit(limit)
+            .offset(offset)
+            .all()
+        )
+
+        for post in posts:
+            post.humanized_time = humanize_time(post.date_posted)
+            post.liked = check_liked(post.id)
+
+        return posts

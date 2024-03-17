@@ -1,5 +1,5 @@
 from flask import jsonify
-from modules.follower_logics import FollowerLogics
+from modules.post_logics import FollowerLogics
 
 
 class Posts:

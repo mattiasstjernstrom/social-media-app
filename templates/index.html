@@ -1,5 +1,5 @@
-{% extends "base.html" %} {% from "_macros.html" import truncate_text %} {%
-block content %}
+{% extends "base.html" %} {% from "_macros.html" import truncate_text,
+view_post_feed %} {% block content %}
 <ul class="nav nav-tabs mb-2">
   <li class="nav-item">
     <a class="nav-link active text-muted" aria-current="page" href="#"
@@ -30,84 +30,8 @@ block content %}
     </ul>
   </li>
 </ul>
-{% for post in followers_posts %}
-<div class="post mt-3">
-  <div style="display: flex; gap: 5px; padding-bottom: 15px">
-    <a
-      href="{{ url_for('site.profile', id=post.owner_user.id) }}"
-      class="link-dark text-decoration-none"
-    >
-      <img
-        src="https://placehold.co/25"
-        alt="User"
-        class="img-fluid"
-        style="border-radius: 50%; margin-right: 8px"
-        width="25 px"
-      />
-      {{ post.owner_user.username }}
-      <i class="bi bi-patch-check" style="color: #b93be8"></i>
-    </a>
-    <span class="text-muted text-lowercase">
-      &middot; {{ post.humanized_time }}</span
-    >
-    <span span="text-muted" style="margin-left: auto; padding-right: 0.5rem">
-      <a href="#"><i class="bi bi-three-dots" style="color: #bbb"></i></a>
-    </span>
-  </div>
-  {% if post.splash_url %}
-  <div class="skeleton splash">
-    <div
-      class="front-post-image"
-      style="background-image: url('{{ post.splash_url }}');"
-    >
-      <a
-        href="{{ url_for('site.view_post', id=post.id) }}"
-        class="post-title-link"
-        >{{ post.title }}</a
-      >
-    </div>
-  </div>
-  {% endif %}{% if post.splash_caption and post.splash_url %}
-  <div class="row">
-    <div class="col caption">{{ post.splash_caption }}</div>
-    {% endif %} {% if post.splash_credit and post.splash_url %}
-    <div class="col text-end credit">Photo by {{ post.splash_credit }}</div>
-  </div>
-  {% endif %}
-  <div class="post-text">
-    <p>{{ truncate_text(post.content, 500, post) }}</p>
-    <div style="display: flex; gap: 15px">
-      <a
-        href="{{ url_for('site.like_post', post_id=post.id) }}"
-        class="text-muted text-decoration-none"
-        ><i
-          class="bi bi-heart{% if not post.likes == 0 %}-fill"
-          style="color: #C3312D{% endif %}"
-        ></i>
-        {% if not post.comments_disabled %}<span id="likes"
-          >{{ post.likes }} like{% if not post.likes == 1%}s{% endif %}</span
-        ></a
-      >
-      {% endif %} {% if not post.comments_disabled %}
-      <a
-        href="{{ url_for('site.view_post', id=post.id) }}"
-        class="text-muted text-decoration-none"
-        ><i
-          class="bi bi-chat-dots{% if not post.comments == 0 %}-fill"
-          style="color: #4F95D0{% endif %}"
-        ></i>
-        <span id="comments"
-          >{{ post.comments }} comment{% if not post.comments == 1 %}s{% endif
-          %}</span
-        ></a
-      >
-      {% endif %}
-    </div>
-    <input type="hidden" id="post_id" value="{{ post.id }}" name="post_id" />
-  </div>
-</div>
-<div class="row mb-3" style="border: #eee 1px solid"></div>
-{% endfor %}
+{% for post in followers_posts %} {{ view_post_feed(post, current_user) }} {%
+endfor %}
 
 <div class="mb-3">
   <h2>Trending</h2>

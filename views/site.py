@@ -10,6 +10,7 @@ from flask import (
     session,
 )
 from flask_login import current_user, login_required
+from flask_security import roles_accepted
 
 from api.comments import Comments
 from api.trending import TrendingPosts
@@ -26,8 +27,7 @@ from models.posts import (
 )
 from models.users import User, Followers
 from modules.check_likes import check_liked
-from modules.date_logics import humanize_time
-from modules.follower_logics import FollowerLogics
+from modules.post_logics import FollowerLogics, ProfileLogics
 
 site = Blueprint("site", __name__)
 
@@ -79,26 +79,16 @@ def index():
 @login_required
 def profile(id):
     get_user = User.query.get(id)
-    raw_posts = (
-        UserPost.query.filter_by(user_id=id).order_by(UserPost.date_posted.desc()).all()
-    )
-
-    get_posts = []
-    for post in raw_posts:
-        post_dict = {
-            "id": post.id,
-            "date_posted": post.date_posted,
-            "humanized_date": humanize_time(post.date_posted),
-            "title": post.title,
-            "splash_url": post.splash_url,
-            "content": post.content,
-        }
-        get_posts.append(post_dict)
-
+    get_posts = ProfileLogics().get_user_posts(get_user.id)
     is_following = FollowerLogics().check_following(current_user.id, id)
     context = {"page_title": "Profile", "is_following": is_following}
     return (
-        render_template("user/profile.html", **context, user=get_user, posts=get_posts),
+        render_template(
+            "user/profile.html",
+            **context,
+            user=get_user,
+            posts=get_posts,
+        ),
         200,
     )
 
@@ -425,3 +415,16 @@ def view_tag(tag_name):
         render_template("posts/view_tags.html", **context, posts=get_posts_with_tag),
         200,
     )
+
+
+@site.route("/verify/<int:id>")
+@roles_accepted("Admin")
+def verify_user(id):
+    get_user = User.query.get(id)
+    if not get_user:
+        flash("User not found", "danger")
+        return redirect(url_for("site.index"))
+    get_user.verified = True
+    db.session.commit()
+    flash("User verified", "success")
+    return redirect(url_for("site.index"))

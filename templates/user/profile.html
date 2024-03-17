@@ -1,87 +1,77 @@
-{% extends "base.html" %}{% block content %}
+{% extends "base.html" %} {% from "_macros.html" import truncate_text,
+view_post_feed %}{% block content %}
 <div class="text-center">
+  <!-- TODO: Implement avatar, fix skeleton -->
   <img
     src="https://i.pravatar.cc/100"
     alt="Profile Image"
-    style="border-radius: 50%; margin-bottom: 20px"
+    style="
+      background-color: #ccc;
+      border: 2px solid #b93be8;
+      border-radius: 50%;
+      margin-bottom: 20px;
+      width: 100px;
+      height: 100px;
+    "
   />
   <h1 style="font-family: 'Roboto-Serif'">
-    {{ user.username }} <i class="bi bi-patch-check" style="color: #b93be8"></i>
+    {{ user.username }} {% if user.verified %}
+    <i class="bi bi-patch-check" style="color: #b93be8"></i>
+    {% endif %}
   </h1>
-  <!-- if user is admin: -->
-  {% if user.company %}
-  <p class="badge bg-primary rounded-">&star; {{ user.company }}</p>
-  {% endif %} {% if user.id == current_user.id %}
-  <div class="row mx-1 text-center">
-    <p class="lead">This is your profile</p>
-  </div>
-  {% else %} {% if not is_following %}
-  <div class="row mx-1 text-center">
-    <a href="{{ url_for('site.follow_user', user_id=user.id) }}">Follow</a>
-  </div>
-  {% else %}
-  <div class="row mx-1 text-center">
-    <a href="{{ url_for('site.unfollow_user', user_id=user.id) }}">Unfollow</a>
-  </div>
-  {% endif %} {% endif %}
+
+  <!-- TODO: implement-->
+  <!-- if user is staff/admin at a company: -->
+  {% if user.has_role('Admin') %}
+  <p class="badge bg-primary rounded-pill">&star; Administrator</p>
+
+  {% endif %} {% if not user.id == current_user.id %}
   <div class="text-center">
-    Followes:
-    <a href="{{ url_for('site.followers', user_id=user.id) }}"
-      >{{ user.followers.count() }}</a
+    <span class="badge bg-secondary rounded-pill p-2 mb-3"
+      >{% if not is_following %}
+      <a
+        href="{{ url_for('site.follow_user', user_id=user.id) }}"
+        class="link-light text-decoration-none"
+        >Follow</a
+      >
+      {% else %}
+      <a
+        href="{{ url_for('site.unfollow_user', user_id=user.id) }}"
+        class="link-light text-decoration-none"
+        >Unfollow</a
+      >
+      {% endif %}</span
     >
   </div>
-  <div class="text-center">
-    Following:
-    <a href="{{ url_for('site.followers', user_id=user.id) }}"
-      >{{ user.followed.count() }}</a
-    >
+  {% endif %}
+  <div class="row mt-3">
+    <div class="col-4">
+      <!-- TODO: fix counter -->
+      <h3>{{ posts|length }}</h3>
+      <p class="text-muted">Posts</p>
+    </div>
+    <div class="col-4">
+      <a
+        href="{{ url_for('site.followers', user_id=user.id) }}"
+        class="text-black text-decoration-none"
+      >
+        <h3>{{ user.followers.count() }}</h3>
+        <p class="text-muted">Followers</p></a
+      >
+    </div>
+    <div class="col-4">
+      <a
+        href="{{ url_for('site.followers', user_id=user.id) }}"
+        class="text-black text-decoration-none"
+      >
+        <h3>{{ user.followed.count() }}</h3>
+        <p class="text-muted">Following</p>
+      </a>
+    </div>
   </div>
-  <p>Profile text here</p>
 </div>
 
-<div class="row mx-1">
-  <div class="row">
-    <h2>{{ user.username }} posts</h2>
-    {% for post in posts %}
-    <div class="row callout">
-      {% if post.splash_url != "" %}
-      <div class="col-3">
-        <div class="skeleton">
-          <a href="{{ url_for('site.view_post', id=post.id) }}">
-            <div
-              class="post-image"
-              style="background-image: url('{{ post.splash_url }}');"
-            ></div>
-          </a>
-        </div>
-      </div>
-      <div class="col-8">
-        {% else %}
-        <div>
-          {% endif %}
-          <h2>
-            <a
-              href="{{ url_for('site.view_post', id=post.id) }}"
-              class="post-title-link"
-              >{{ post.title }}</a
-            >
-          </h2>
-          <p>{{ post.content | truncate(120, False, "...") }}</p>
-          <p>
-            Posted {{ post.humanized_date }}{% if user.id == current_user.id %}
-            -
-            <a
-              href="{{ url_for('site.delete_post', id=post.id) }}"
-              class="link-danger"
-              >Delete</a
-            >{% endif %}
-          </p>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-    {% endblock %} {% block scripts %} {{ super() }}
-    <script src="{{ url_for('static', filename='js/profile_page.js') }}"></script>
-    {% endblock %}
-  </div>
-</div>
+{% for post in posts %} {{ view_post_feed(post, current_user) }} {% endfor %} {%
+endblock %} {% block scripts %} {{ super() }}
+<script src="{{ url_for('static', filename='js/profile_page.js') }}"></script>
+{% endblock %}

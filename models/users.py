@@ -21,6 +21,7 @@ class User(db.Model, UserMixin):
     active = Column(Boolean())
     fs_uniquifier = Column(String(64), unique=True, nullable=False)
     confirmed_at = Column(DateTime())
+    verified = Column(Boolean(), default=False)
     roles = relationship(
         "Role", secondary="roles_users", backref=backref("users", lazy="dynamic")
     )
@@ -39,6 +40,7 @@ class User(db.Model, UserMixin):
             "active": self.active,
             "fs_uniquifier": self.fs_uniquifier,
             "confirmed_at": self.confirmed_at,
+            "verified": self.verified,
         }
 
 
