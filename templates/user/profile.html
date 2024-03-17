@@ -1,27 +1,47 @@
 {% extends "base.html" %}{% block content %}
-<h1>{{ page_title }}</h1>
-<p>Welcome</p>
-<div class="row mx-1">Followes: {{ user.followers.count() }}</div>
-<div class="row mx-1">Following: {{ user.followed.count() }}</div>
-<div class="row mx-1">
-  <a href="{{ url_for('site.followers', user_id=user.id) }}">Followers</a>
-
-  {% if user.id == current_user.id %}
-  <div class="row mx-1">
+<div class="text-center">
+  <img
+    src="https://i.pravatar.cc/100"
+    alt="Profile Image"
+    style="border-radius: 50%; margin-bottom: 20px"
+  />
+  <h1 style="font-family: 'Roboto-Serif'">
+    {{ user.username }} <i class="bi bi-patch-check" style="color: #b93be8"></i>
+  </h1>
+  <!-- if user is admin: -->
+  {% if user.company %}
+  <p class="badge bg-primary rounded-">&star; {{ user.company }}</p>
+  {% endif %} {% if user.id == current_user.id %}
+  <div class="row mx-1 text-center">
     <p class="lead">This is your profile</p>
   </div>
   {% else %} {% if not is_following %}
-  <div class="row mx-1">
+  <div class="row mx-1 text-center">
     <a href="{{ url_for('site.follow_user', user_id=user.id) }}">Follow</a>
   </div>
   {% else %}
-  <div class="row mx-1">
+  <div class="row mx-1 text-center">
     <a href="{{ url_for('site.unfollow_user', user_id=user.id) }}">Unfollow</a>
   </div>
   {% endif %} {% endif %}
+  <div class="text-center">
+    Followes:
+    <a href="{{ url_for('site.followers', user_id=user.id) }}"
+      >{{ user.followers.count() }}</a
+    >
+  </div>
+  <div class="text-center">
+    Following:
+    <a href="{{ url_for('site.followers', user_id=user.id) }}"
+      >{{ user.followed.count() }}</a
+    >
+  </div>
+  <p>Profile text here</p>
+</div>
 
+<div class="row mx-1">
   <div class="row">
-    <h2>{{ user.username }} Posts</h2>
+    <h2>{{ user.username }} posts</h2>
     {% for post in posts %}
     <div class="row callout">
       {% if post.splash_url != "" %}
@@ -30,7 +50,8 @@
           <a href="{{ url_for('site.view_post', id=post.id) }}">
             <div
               class="post-image"
-              style="background-image: url('{{ post.splash_url }}');"></div>
+              style="background-image: url('{{ post.splash_url }}');"
+            ></div>
           </a>
         </div>
       </div>
@@ -47,12 +68,13 @@
           </h2>
           <p>{{ post.content | truncate(120, False, "...") }}</p>
           <p>
-            Posted {{ post.humanized_date }} -
+            Posted {{ post.humanized_date }}{% if user.id == current_user.id %}
+            -
             <a
               href="{{ url_for('site.delete_post', id=post.id) }}"
               class="link-danger"
               >Delete</a
-            >
+            >{% endif %}
           </p>
         </div>
       </div>

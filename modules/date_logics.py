@@ -2,19 +2,27 @@ from datetime import datetime, timedelta
 
 
 def humanize_time(dt):
-    now = datetime.utcnow()
+    now = datetime.now()
     diff = now - dt
 
-    if diff < timedelta(minutes=1):
+    if diff < timedelta(seconds=10):
+        return "Now"
+    elif diff < timedelta(minutes=1):
         return "A moment ago"
     elif diff < timedelta(hours=1):
-        return f"{int(diff.total_seconds() / 60)} minutes ago"
-    elif diff < timedelta(hours=2):
-        return "One hour ago"
+        minutes = int(diff.total_seconds() / 60)
+        if minutes == 1:
+            return "One minute ago"
+        else:
+            return f"{minutes} minutes ago"
     elif diff < timedelta(days=1):
-        return f"{int(diff.total_seconds() / 3600)} hours ago"
+        hours = int(diff.total_seconds() / 3600)
+        if hours == 1:
+            return "One hour ago"
+        else:
+            return f"{hours} hours ago"
     elif diff < timedelta(days=2):
-        return "Yesterday"
+        return "Igår"
     elif diff < timedelta(days=365):
         return dt.strftime("%B %d")
     else:

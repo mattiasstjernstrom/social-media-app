@@ -3,6 +3,7 @@
 body a,
 body a:visited {
   color: #1e90ff;
+  font-family: "Roboto", sans-serif;
 }
 
 body a:hover {
@@ -90,9 +91,9 @@ input[type="checkbox"] {
 a.post-title-link {
   display: inline-block;
   text-decoration: none;
-  font-family: "Times New Roman", Times, serif;
+  font-family: "Roboto Serif", "Times New Roman", Times, serif;
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 500;
   color: #1b1b1b !important;
   padding: 0 10px;
   margin: 5px;
@@ -111,16 +112,13 @@ a.post-title-link {
   max-height: 400px;
 }
 
-.post-text {
-  padding-top: 20px;
-}
-
 .credit,
 .caption {
   font-size: 12px;
   color: #979797;
   margin-top: 5px;
   font-style: italic;
+  padding-bottom: 10px;
 }
 
 .pill-link {

@@ -14,9 +14,9 @@
   <ul class="navbar-nav ms-auto text-end">
     <li class="nav-item">
       <a
+        href="{{ url_for('site.index') }}"
         class="nav-link {{ is_active('site.index') }}"
         aria-current="page"
-        href="{{ url_for('site.index') }}"
         >Home</a
       >
     </li>

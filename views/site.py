@@ -1,4 +1,4 @@
-from random import randint
+from datetime import datetime
 from flask import (
     Blueprint,
     flash,
@@ -47,9 +47,6 @@ def index():
         .limit(5)
         .all()
     )
-
-    #! add fake 1000 tag for test
-    top_tags.append(("Fake", 1000))
 
     # Add k to the total if it's over 999
     top_tags = [
@@ -119,13 +116,14 @@ def post():
             title=form.title.data,
             splash_url=form.splash_url.data,
             splash_caption=form.splash_caption.data,
-            spalsh_credit=form.splash_credit.data,
+            splash_credit=form.splash_credit.data,
             content=form.content.data,
             draft=form.draft.data,
             friends_only=form.friends_only.data,
             followers_only=form.followers_only.data,
             user_id=current_user.id,
             comments_disabled=form.comments_disabled.data,
+            date_posted=datetime.now(),
         )
 
         db.session.add(save_post)

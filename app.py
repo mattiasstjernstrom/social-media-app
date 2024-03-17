@@ -8,7 +8,7 @@ from flask_wtf.csrf import CSRFProtect
 from api import api
 from models.db import db
 from models.users import User, Role
-from models.posts import UserPost, UserPostLikes, UserPostShares, UserPostComments
+from models.posts import UserPost
 from views.unauth import unauthenticated
 from views.site import site
 from services import *
@@ -41,4 +41,7 @@ app.register_blueprint(api, url_prefix="/api")
 if __name__ == "__main__":
     with app.app_context():
         upgrade()
+        from modules.data_seeder import DataSeeder
+
+        DataSeeder().seed_all()
     app.run(debug=True, port=5000)
