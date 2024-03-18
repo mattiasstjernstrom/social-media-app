@@ -109,7 +109,7 @@ a.post-title-link {
 }
 
 .splash {
-  max-height: 400px;
+  height: 400px;
 }
 
 .credit,
@@ -119,6 +119,10 @@ a.post-title-link {
   margin-top: 5px;
   font-style: italic;
   padding-bottom: 10px;
+}
+
+.card-text {
+  margin-top: 10px;
 }
 
 .pill-link {

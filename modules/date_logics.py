@@ -2,7 +2,8 @@ from datetime import datetime, timedelta
 
 
 def humanize_time(dt):
-    now = datetime.now()
+    # !Deprecated, fix
+    now = datetime.utcnow()
     diff = now - dt
 
     if diff < timedelta(seconds=10):

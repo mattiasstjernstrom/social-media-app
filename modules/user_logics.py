@@ -13,7 +13,6 @@ from modules.check_likes import check_liked
 
 
 class FollowerLogics:
-
     def check_following(self, user_id, target_id):
         results = (
             db.session.query(Followers)
@@ -29,6 +28,22 @@ class FollowerLogics:
             select(Followers.followed_id)
             .where(Followers.follower_id == user_id)
             .scalar_subquery()
+        )
+
+    def view_followers(self, user_id):
+        return (
+            db.session.query(Followers)
+            .filter(Followers.followed_id == user_id)
+            .order_by(Followers.id.desc())
+            .all()
+        )
+
+    def view_following(self, user_id):
+        return (
+            db.session.query(Followers)
+            .filter(Followers.follower_id == user_id)
+            .order_by(Followers.id.desc())
+            .all()
         )
 
     def get_followers_posts(self, limit=10, offset=0):

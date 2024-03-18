@@ -15,7 +15,7 @@
   <div class="col text-end credit">Photo by {{ post.splash_credit }}</div>
   {% endif %}
 </div>
-<div class="row m-3">
+<div class="row">
   <p style="white-space: pre-wrap">{{ post.content }}</p>
   <div class="callout" id="callout">
     {% if liked %}
@@ -46,13 +46,9 @@
     {% endif %}
   </div>
   <input type="hidden" id="post_id" value="{{ post.id }}" name="post_id" />
-  {% if post.comments_disabled %}
-  <p class="comments-disabled-warning" id="no-comments">
-    Comments are disabled on this post.
-  </p>
-  {% else %} {% include "posts/view_comments.html" %} {% endif %}
 </div>
-{% endblock %}{% block scripts %} {{ super() }}
+{% include "posts/view_comments.html" %} {% endblock %}{% block scripts %} {{
+super() }}
 <script src="{{ url_for('static', filename='js/post_comment.js') }}"></script>
 
 {% endblock %}

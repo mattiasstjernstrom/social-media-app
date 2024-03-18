@@ -5,7 +5,8 @@ function updateSubmitButtonStatus() {
 
   const isEnabled = title.length > 0 && content.length > 0;
   submitButton.disabled = !isEnabled;
-  submitButton.style.color = isEnabled ? "#444" : "grey";
+  submitButton.style.color = isEnabled ? "white" : "grey";
+  submitButton.style.backgroundColor = isEnabled ? "dodgerblue" : "lightgrey";
 }
 
 document.getElementById("draft").addEventListener("change", function () {

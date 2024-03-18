@@ -32,6 +32,8 @@ class Comments:
             for key, value in comment_owner.to_dict().items():
                 if key in ["username", "active"]:
                     comment_dict[key] = value
+                if key in ["verified", True]:
+                    comment_dict["verified"] = value
             comments_list.append(comment_dict)
 
         return comments_list

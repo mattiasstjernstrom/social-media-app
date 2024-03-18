@@ -42,42 +42,47 @@ function fetchMoreComments() {
 
 function comment_template(comment) {
   let commentDate =
-    comment.date_humanized === undefined ? "now" : comment.date_humanized;
+    comment.date_humanized === undefined ? "Now" : comment.date_humanized;
   let commentElement = `
-    <div class="col-1">
-        <img
-            src="https://via.placeholder.com/50"
-            alt="User"
-            class="img-fluid"
-            style="border-radius: 50%" />
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <strong class="card-title">
+    <div class="comment mt-5">
+    <div style="display: flex; gap: 5px; padding-bottom: 15px">
                     <a
                         href="/profile/${comment.user_id}/"
-                        class="link-dark"
-                        style="text-decoration: none"
-                        >${comment.username}</a
-                    >
-                </strong>
-                says:
-                <p class="card-text">${comment.content}</p>
-                <small>${commentDate}</small>`;
+                          class="link-dark text-decoration-none"
+                        >
+                        <div
+          style="
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <img
+            src="https://i.pravatar.cc/25"
+            alt="User"
+            class="img-fluid"
+            style="border-radius: 50%; margin-right: 8px"
+            width="25 px"
+          />${comment.username}</div>
+          </a><i class="text-muted">says:</i>
+      <span class="text-muted" style="margin-left: auto">
+        <small
+          ><i class="me-1">${commentDate}</i>
+          `;
   if (comment.user_id === currentUser) {
     commentElement += ` &middot;
               <a
                 href="/post/${postId}/comment/${comment.id}/delete/"
                 class="link-danger"
-                >Delete</a
+                >Undo</a
               >`;
   }
-  commentElement += `</small>
-            </div>
-        </div>
+  commentElement += `
+          </span>
     </div>
-    `;
+    <div class="comment-content">${comment.content}</div>
+  </div>
+<hr class="border border-1" />`;
   return commentElement;
 }
 

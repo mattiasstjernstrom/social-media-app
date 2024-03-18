@@ -27,7 +27,7 @@ from models.posts import (
 )
 from models.users import User, Followers
 from modules.check_likes import check_liked
-from modules.post_logics import FollowerLogics, ProfileLogics
+from modules.user_logics import FollowerLogics, ProfileLogics
 
 site = Blueprint("site", __name__)
 
@@ -369,24 +369,30 @@ def unfollow_user(user_id):
 @login_required
 def followers(user_id):
     get_user = User.query.get(user_id)
-    get_followers = (
-        db.session.query(Followers)
-        .filter(Followers.followed_id == user_id)
-        .order_by(Followers.id.desc())
-        .all()
-    )
+
+    get_followings = FollowerLogics().view_following(user_id)
+    get_followers = FollowerLogics().view_followers(user_id)
 
     followers_list = []
     for follower in get_followers:
         follower_user = User.query.get(follower.follower_id)
         followers_list.append(follower_user)
 
+    following_list = []
+    for following in get_followings:
+        following_user = User.query.get(following.followed_id)
+        following_list.append(following_user)
+
     context = {
         "page_title": "Followers",
     }
     return (
         render_template(
-            "user/followers.html", **context, user=get_user, followers=followers_list
+            "user/followers.html",
+            **context,
+            user=get_user,
+            followers=followers_list,
+            followings=following_list,
         ),
         200,
     )
@@ -418,6 +424,7 @@ def view_tag(tag_name):
 
 
 @site.route("/verify/<int:id>")
+@site.route("/verify/<int:id>/")
 @roles_accepted("Admin")
 def verify_user(id):
     get_user = User.query.get(id)

@@ -3,13 +3,15 @@
 <div class="row">
   <div class="col-md-6">
     <p>{{ user.username }}s followers:</p>
-    <ul>
+    <ul class="list-group list-group-flush">
       {% if followers|length == 0 %}
-      <li>Has no followes</li>
-      {% endif %} {% for follower in followers %}
-      <li>
-        <a href="{{ url_for('site.profile', id=follower.id) }}"
-          >{{ follower.username }}</a
+      <li class="list-group-item disabled" aria-disabled="true">
+        Has no followers
+      </li>
+      {% endif %} {% for follower_user in followers %}
+      <li class="list-group-item">
+        <a href="{{ url_for('site.profile', id=follower_user.id) }}"
+          >{{ follower_user.username }}</a
         >
       </li>
       {% endfor %}
@@ -17,13 +19,15 @@
   </div>
   <div class="col-md-6">
     <p>{{ user.username }}s following:</p>
-    <ul>
-      {% if following|length == 0 %}
-      <li>Is not following anyone</li>
-      {% endif %} {% for following in following %}
-      <li>
-        <a href="{{ url_for('site.profile', id=following.id) }}"
-          >{{ following.username }}</a
+    <ul class="list-group list-group-flush">
+      {% if followings|length == 0 %}
+      <li class="list-group-item disabled" aria-disabled="true  ">
+        Is not following anyone
+      </li>
+      {% endif %} {% for following_user in followings %}
+      <li class="list-group-item">
+        <a href="{{ url_for('site.profile', id=following_user.id) }}"
+          >{{ following_user.username }}</a
         >
       </li>
       {% endfor %}
