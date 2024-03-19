@@ -1,6 +1,6 @@
 # Social Media App
 
-> [!INFO]
+> [!NOTE]
 > This project is in early dev-state, it may not work as excpected if you download the source code.
 
 ## Introduction
