@@ -43,3 +43,11 @@ function formatCommentDate(dateString) {
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
+
+document.querySelectorAll(".remove-post").forEach(link => {
+  link.addEventListener("click", e => {
+    if (!confirm("Are you sure you want to delete this post?")) {
+      e.preventDefault();
+    }
+  });
+});

@@ -8,4 +8,9 @@
   </div>
   {% endif %}
 </div>
+{% endmacro %} {% macro render_checkbox(field) %}
+<div class="form-check">
+  {{ field(class="form-check-input") }} {{ field.label(class="form-check-label")
+  }}
+</div>
 {% endmacro %}

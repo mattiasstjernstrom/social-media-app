@@ -145,6 +145,33 @@ def post():
     return render_template("posts/post.html", **context, form=form), 200
 
 
+@site.route("/post/<int:id>/edit/", methods=["GET", "POST"])
+@login_required
+def edit_post(id):
+    get_post = UserPost.query.get(id)
+    if not get_post or get_post.owner_user.id != current_user.id:
+        flash("Post not found", "danger")
+        return redirect(url_for("site.index"))
+
+    if request.method == "GET":
+        form = PostForm(obj=get_post)
+    else:
+        form = PostForm(request.form)
+
+    context = {
+        "page_title": "Edit post",
+        "edit": True,
+    }
+
+    if form.validate_on_submit():
+        form.populate_obj(get_post)
+        db.session.commit()
+        flash("Post updated", "success")
+        return redirect(url_for("site.view_post", id=id))
+
+    return render_template("posts/post.html", **context, form=form, post=get_post), 200
+
+
 @site.route("/post/<int:id>/")
 def view_post(id):
     if current_user.is_authenticated:

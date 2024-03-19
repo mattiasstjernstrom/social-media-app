@@ -47,7 +47,15 @@
     <div style="display: flex; gap: 5px">
       <div class="text-muted ps-1" style="font-style: italic">
         Published on {{ post.date_posted.strftime('%Y-%m-%d') }} at {{
-        post.date_posted.strftime('%H:%M') }}{% if post.tags %}
+        post.date_posted.strftime('%H:%M') }} {% if post.date_edited %}
+        <span class="publish-text small"
+          ><i class="bi bi-pencil-fill"></i>
+          <span class="edit-tooltip-text small"
+            >Last edited:<br />{{ post.date_edited.strftime('%Y-%m-%d') }} at {{
+            post.date_edited.strftime('%H:%M') }}</span
+          ></span
+        >
+        {% endif %} {% if post.tags %}
         <ul
           class="tags-list list-unstyled d-flex flex-wrap justify-content-start mt-3"
         >
@@ -84,7 +92,15 @@
           </li>
           <li><a class="dropdown-item" href="#">Share Post</a></li>
           {% if post.owner_user.id == current_user.id %}
-          <li><a class="dropdown-item" href="#">Edit Post</a></li>
+          <li>
+            <a
+              class="dropdown-item"
+              href="
+            {{ url_for('site.edit_post', id=post.id) }}
+            "
+              >Edit Post</a
+            >
+          </li>
           <li><hr class="dropdown-divider" /></li>
           <li>
             <a

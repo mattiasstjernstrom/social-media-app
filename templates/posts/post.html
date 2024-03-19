@@ -1,7 +1,18 @@
 {% extends "base.html" %} {% from 'bootstrap5/form.html' import render_field %}
 {% block content %}
+<div class="d-flex justify-content-between">
+  <h2>{{ page_title }}</h2>
+  {% if edit %}
+  <div class="float-end">
+    <a
+      href="{{ url_for('site.delete_post', id=post.id) }}"
+      class="btn fw-bold border-danger remove-post text-danger text-decoration-none"
+      >Remove Post</a
+    >
+  </div>
+  {% endif %}
+</div>
 
-<h2>{{ page_title }}</h2>
 <form method="POST" class="mx-auto">
   {{ form.csrf_token }}
   <div class="row">
@@ -19,6 +30,29 @@
   <div class="row">
     <div class="w-10">{{ render_field(form.content) }}</div>
   </div>
+  {% if edit %}
+  <!--
+  <div class="row">
+    <div class="w-10">
+      <h5>Existing Tags</h5>
+      <div class="mb-3 form-check">
+        <label class="form-label">
+          <input
+            type="checkbox"
+            name="remove_tags"
+            class="form-check-input"
+          />Remove Tags</label
+        >
+      </div>
+    </div>
+  </div>-->
+  <div class="row mb-3">
+    <i class="text-danger small fst-italic"
+      >You cannot remove tags from an existing post, this feature is not yet
+      implemented.
+    </i>
+  </div>
+  {% endif %}
   <div class="row">
     <div class="w-10">{{ render_field(form.tags) }}</div>
   </div>

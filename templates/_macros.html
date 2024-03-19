@@ -55,7 +55,13 @@ endmacro %} {% macro view_post_feed(post, current_user) %}
         </li>
         <li><a class="dropdown-item" href="#">Share Post</a></li>
         {% if post.owner_user.id == current_user.id %}
-        <li><a class="dropdown-item" href="#">Edit Post</a></li>
+        <li>
+          <a
+            class="dropdown-item"
+            href="{{ url_for('site.edit_post', id=post.id) }}"
+            >Edit Post</a
+          >
+        </li>
         <li><hr class="dropdown-divider" /></li>
         <li>
           <a

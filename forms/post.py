@@ -24,7 +24,7 @@ class PostForm(FlaskForm):
     )
     splash_caption = StringField(
         "Caption",
-        validators=[Optional(), validators.Length(min=4, max=100)],
+        validators=[Optional(), validators.Length(min=3, max=100)],
         render_kw={"placeholder": "A caption for the splash..."},
     )
     splash_credit = StringField(
@@ -38,7 +38,7 @@ class PostForm(FlaskForm):
         render_kw={"placeholder": "Your thoughts..."},
     )
     tags = StringField(
-        "Tags",
+        "Add Tags",
         validators=[
             Optional(),
             validators.Length(min=2, max=100),
