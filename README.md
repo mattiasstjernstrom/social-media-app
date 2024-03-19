@@ -1,7 +1,7 @@
 # Social Media App
 
-> [!WARNING]
-> This project is WIP and may not work if you run it as it is!
+> [!INFO]
+> This project is in early dev-state, it may not work as excpected if you download the source code.
 
 ## Introduction
 
