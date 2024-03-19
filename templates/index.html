@@ -1,11 +1,14 @@
 {% extends "base.html" %} {% from "_macros.html" import truncate_text,
 view_post_feed %} {% block content %}
-<ul class="nav nav-tabs mb-2">
+<!-- TODO: Implement more feeds
+
+  <ul class="nav mb-2">
   <li class="nav-item">
-    <a class="nav-link active text-muted" aria-current="page" href="#"
+    <a class="nav-link active text-muted" aria-current="page" href="/"
       >For you</a
     >
   </li>
+
   <li class="nav-item">
     <a class="nav-link" href="#">What's hot</a>
   </li>
@@ -29,7 +32,8 @@ view_post_feed %} {% block content %}
       <li><a class="dropdown-item" href="#">Separated link</a></li>
     </ul>
   </li>
-</ul>
+
+</ul>  -->
 {% for post in followers_posts %} {{ view_post_feed(post, current_user) }} {%
 endfor %}
 

@@ -165,6 +165,8 @@ def edit_post(id):
 
     if form.validate_on_submit():
         form.populate_obj(get_post)
+        get_post.date_posted = get_post.date_posted
+        get_post.date_edited = datetime.now()
         db.session.commit()
         flash("Post updated", "success")
         return redirect(url_for("site.view_post", id=id))

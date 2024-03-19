@@ -90,6 +90,12 @@ endmacro %} {% macro view_post_feed(post, current_user) %}
       >
     </div>
   </div>
+  {% else %}
+  <a
+    href="{{ url_for('site.view_post', id=post.id) }}"
+    class="post-title-link-no-splash"
+    >{{ post.title }}</a
+  >
   {% endif %}{% if post.splash_caption and post.splash_url %}
   <div class="row">
     <div class="col caption">{{ post.splash_caption }}</div>

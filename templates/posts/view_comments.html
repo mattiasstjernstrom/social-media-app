@@ -1,6 +1,6 @@
 {% if post.comments_disabled %}
 <div
-  class="text-muted alert alert-secondary my-3"
+  class="text-muted text-center alert alert-secondary my-3"
   role="alert"
   id="no-comments"
 >
@@ -114,10 +114,10 @@
     </button>
   </div>
 </div>
-{% else %}
+{% else %} {% if not post.comments_disabled %}
 <div class="row py-3 text-center" id="comment-container">
   <div class="row" id="no-comments">
     <i class="text-muted">No comments yet, be the first to comment! </i>
   </div>
 </div>
-{% endif %}
+{% endif %} {% endif %}
