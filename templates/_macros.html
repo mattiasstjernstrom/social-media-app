@@ -38,10 +38,8 @@ endmacro %} {% macro view_post_feed(post, current_user) %}
       </div>
     </a>
     <span class="text-muted text-lowercase"> &middot;</span>
-    <a
-      href="{{ url_for('site.view_post', id=post.id) }}"
-      class="text-muted text-lowercase text-decoration-none"
-      >{{ post.humanized_time }}</a
+    <i class="text-muted text-lowercase text-decoration-none"
+      >{{ post.humanized_time }}</i
     >
     <span style="margin-left: auto">
       <a href="#" data-bs-toggle="dropdown" role="button" aria-expanded="false"
@@ -96,26 +94,24 @@ endmacro %} {% macro view_post_feed(post, current_user) %}
   <div class="post-text">
     <p>{{ truncate_text(post.content, 500, post) }}</p>
     <div style="display: flex; gap: 15px">
-      <!-- TODO: unlike post -->
       <a
-        href="{{ url_for('site.like_post', post_id=post.id) }}"
+        href="{% if post.liked %}{{ url_for('site.unlike_post', post_id=post.id) }}{% else %}
+        {{ url_for('site.like_post', post_id=post.id) }}{% endif %}
+        "
         class="text-muted text-decoration-none"
         ><i
-          class="bi bi-heart{% if not post.likes == 0 %}-fill"
+          class="bi bi-heart{% if post.liked %}-fill"
           style="color: #C3312D{% endif %}"
         ></i>
-        <span id="likes"
-          >{{ post.likes }} like{% if not post.likes == 1%}s</span
+        <span id="likes">
+          {{ post.likes }} like{% if not post.likes == 1%}s</span
         ></a
       >
       {% endif %} {% if not post.comments_disabled %}
       <a
         href="{{ url_for('site.view_post', id=post.id) }}"
         class="text-muted text-decoration-none"
-        ><i
-          class="bi bi-chat-dots{% if not post.comments == 0 %}-fill"
-          style="color: #4F95D0{% endif %}"
-        ></i>
+        ><i class="bi bi-chat-dots"></i>
         <span id="comments"
           >{{ post.comments }} comment{% if not post.comments == 1 %}s{% endif
           %}</span

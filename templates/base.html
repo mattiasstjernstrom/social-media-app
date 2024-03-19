@@ -106,8 +106,10 @@
     </footer>
     {% block scripts %} {{ bootstrap.load_js() }}
     <script>
+      // User data
       const currentUser = {{ current_user.id }};
       const currentUserName = "{{ current_user.username }}";
+      const currentUserVerified = "{{ current_user.verified }}";
     </script>
     <script src="{{url_for('static',filename='js/main.js')}}"></script>
 

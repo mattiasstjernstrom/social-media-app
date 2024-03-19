@@ -27,19 +27,22 @@ input[type="checkbox"] {
   opacity: 1;
 }
 
-.comments-disabled-warning {
+.publish-info {
   color: #979797;
-  font-size: 12px;
   margin-top: 25px;
+  padding: 10px;
+  border-top: 1px solid #e9e9e9;
+  background-color: #f0f0f0;
 }
 
-.callout {
-  margin-top: 20px;
-  padding: 20px;
-  border: 1px solid #dee2e6;
-  border-left-width: 5px;
-  border-radius: 3px;
-  border-radius: 5px;
+.user-info {
+  padding: 20px 5px;
+  background: linear-gradient(
+    180deg,
+    rgba(61, 61, 61, 0.05) 0%,
+    transparent 100%
+  );
+  border-top: 1px solid #e2e2e2;
 }
 
 .skeleton {
@@ -128,4 +131,13 @@ a.post-title-link {
 .pill-link {
   color: #fff;
   text-decoration: none;
+}
+
+textarea#comment {
+  resize: none;
+  box-shadow: rgba(27, 27, 27, 0.075) 0px 0px 15px 1px;
+}
+
+textarea#comment:focus {
+  box-shadow: rgba(30, 143, 255, 0.268) 0px 0px 10px 1px;
 }

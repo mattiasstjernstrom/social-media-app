@@ -312,6 +312,10 @@ def comment_post(post_id):
 @site.get("/post/<int:post_id>/comment/<int:comment_id>/delete/")
 @login_required
 def delete_comment(post_id, comment_id):
+    get_post = UserPost.query.get(post_id)
+    if not get_post or (get_post.draft):
+        return jsonify("Post not found"), 404
+
     get_comment = UserPostComments.query.get(comment_id)
     if not get_comment:
         flash("Comment not found", "danger")
@@ -321,6 +325,7 @@ def delete_comment(post_id, comment_id):
         flash("You cannot delete this comment", "danger")
 
     db.session.delete(get_comment)
+    get_post.comments -= 1
     db.session.commit()
 
     flash("Comment deleted", "success")
