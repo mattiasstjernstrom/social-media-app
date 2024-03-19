@@ -34,12 +34,14 @@ This project leverages the following technologies:
 
 Your contributions are welcome! If you'd like to contribute to this project, please fork the repository and submit a pull request with your proposed changes. For major changes, please open an issue first to discuss what you would like to change.
 
-## To do
+## Features in dev-state
 
-- **Nested comments**
-- **@Users:** Mentioning users
+- **Improved comments** Nested comments, like and replies, edit comments
+- **@users:** Mentioning users
 - **Reupload posts**
-- **Trending post**
+- **Upload images** Both profile and post images
+- **Improved desktop design**
+- **Improved mobile design**
 
 ## License
 
