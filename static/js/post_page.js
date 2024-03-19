@@ -9,6 +9,10 @@ function updateSubmitButtonStatus() {
   submitButton.style.backgroundColor = isEnabled ? "dodgerblue" : "lightgrey";
 }
 
+if (document.getElementById("draft").checked) {
+  document.getElementById("submit").innerHTML = "Save Draft";
+}
+
 document.getElementById("draft").addEventListener("change", function () {
   document.getElementById("submit").innerHTML = this.checked
     ? "Save Draft"

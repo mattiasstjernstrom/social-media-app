@@ -13,32 +13,32 @@ import regex
 
 class PostForm(FlaskForm):
     title = StringField(
-        "Title",
+        "Article title",
         [validators.Length(min=4, max=25), validators.DataRequired()],
-        render_kw={"placeholder": "Write a selling title..."},
+        render_kw={"placeholder": "Add a selling title!"},
     )
     splash_url = StringField(
-        "Splash",
+        "Splash imgage URL",
         validators=[Optional(), URL()],
         render_kw={"placeholder": "https://example.com/splash.png"},
     )
     splash_caption = StringField(
         "Caption",
         validators=[Optional(), validators.Length(min=3, max=100)],
-        render_kw={"placeholder": "A caption for the splash..."},
+        render_kw={"placeholder": "What's happening in the photo?"},
     )
     splash_credit = StringField(
-        "Credit",
+        "Splash credit",
         validators=[Optional(), validators.Length(min=4, max=100)],
-        render_kw={"placeholder": "Credit the splash..."},
+        render_kw={"placeholder": "Who took the photo?"},
     )
     content = TextAreaField(
-        "Content",
+        "Article content",
         [validators.Length(min=10, max=10000), validators.DataRequired()],
         render_kw={"placeholder": "Your thoughts..."},
     )
     tags = StringField(
-        "Add Tags",
+        "Tags",
         validators=[
             Optional(),
             validators.Length(min=2, max=100),
@@ -47,9 +47,9 @@ class PostForm(FlaskForm):
                 message="Only letters, numbers, and hyphens are allowed",
             ),
         ],
-        render_kw={"placeholder": "Music, Cats, Programming..."},
+        render_kw={"placeholder": f"Music, Cats, Programming, [...]"},
     )
     draft = SwitchField("Draft")
     friends_only = SwitchField("Friends Only")
-    followers_only = SwitchField("Followers Only")
-    comments_disabled = SwitchField("Disable comments on this post")
+    users_only = SwitchField("Logged-in Only")
+    comments_disabled = SwitchField("Disable comments")

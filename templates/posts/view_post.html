@@ -1,4 +1,16 @@
-{% extends "base.html" %} {% block content %} {% if post.splash_url %}
+{% extends "base.html" %} {% block content %} {% if post.draft %}
+<div class="alert alert-warning" role="alert">
+  <i class="bi bi-exclamation-triangle-fill"></i>
+  This post is saved as
+  <a
+    style="color: #523e02 !important; font-weight: bold"
+    href="
+        {{ url_for('site.edit_post', id=post.id) }}
+        "
+    >draft</a
+  >. <em>Only you can see it.</em>
+</div>
+{% endif %} {% if post.splash_url %}
 <div class="skeleton splash">
   <div
     class="big-post-image"

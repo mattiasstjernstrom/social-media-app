@@ -57,8 +57,14 @@
     <div class="w-10">{{ render_field(form.tags) }}</div>
   </div>
   <div class="row">
+    <h5>Who can see this post?</h5>
+  </div>
+  <div class="row">
     <div class="col">{{ render_field(form.friends_only) }}</div>
-    <div class="col">{{ render_field(form.followers_only) }}</div>
+    <div class="col">{{ render_field(form.users_only) }}</div>
+  </div>
+  <div class="row">
+    <h5>Other options</h5>
   </div>
   <div class="row">
     <div class="col">{{ render_field(form.draft) }}</div>

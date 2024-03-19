@@ -6,7 +6,6 @@ class Posts:
     def get_feed_post(self, limit, offset):
         post_list = []
         followers_posts = FollowerLogics().get_followers_posts(limit, offset)
-
         for post in followers_posts:
             post_dict = {
                 "id": post.id,
@@ -26,6 +25,6 @@ class Posts:
                 "comments": post.comments,
                 "comments_disabled": post.comments_disabled,
             }
-            post_list.append(post_dict)
+        post_list.append(post_dict)
 
         return jsonify(post_list)

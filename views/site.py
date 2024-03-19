@@ -110,7 +110,7 @@ def post():
             content=form.content.data,
             draft=form.draft.data,
             friends_only=form.friends_only.data,
-            followers_only=form.followers_only.data,
+            users_only=form.users_only.data,
             user_id=current_user.id,
             comments_disabled=form.comments_disabled.data,
             date_posted=datetime.now(),
@@ -176,6 +176,11 @@ def edit_post(id):
 
 @site.route("/post/<int:id>/")
 def view_post(id):
+    get_post = UserPost.query.get(id)
+    if not get_post or (get_post.draft and get_post.owner_user.id != current_user.id):
+        flash("Post not found", "danger")
+        return redirect(url_for("site.index"))
+
     if current_user.is_authenticated:
         check_view = PostViews.query.filter_by(
             post_id=id, user_id=current_user.id
@@ -194,16 +199,12 @@ def view_post(id):
             db.session.add(save_view)
             db.session.commit()
 
-    get_post = UserPost.query.get(id)
     if get_post.post_views is None:
         get_post.post_views = 0
     get_post.post_views += 1
     db.session.commit()
     get_comments = Comments().load(id)
 
-    if not get_post or (get_post.draft and get_post.owner_user.id != current_user.id):
-        flash("Post not found", "danger")
-        return redirect(url_for("site.index"))
     post_tags = (
         db.session.query(Tags)
         .join(PostTags)

@@ -42,6 +42,15 @@ endmacro %} {% macro view_post_feed(post, current_user) %}
       >{{ post.humanized_time }}</i
     >
     <span style="margin-left: auto">
+      {% if post.draft %}
+      <a
+        class="badge bg-warning text-dark text-decoration-none"
+        href="
+        {{ url_for('site.edit_post', id=post.id) }}
+        "
+        >Draft</a
+      >
+      {% endif %}
       <a href="#" data-bs-toggle="dropdown" role="button" aria-expanded="false"
         ><i class="bi bi-three-dots-vertical" style="color: #bbb"></i
       ></a>

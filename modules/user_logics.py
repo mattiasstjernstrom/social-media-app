@@ -3,7 +3,6 @@ Logics for the follower module
 """
 
 from flask_login import current_user
-from sqlalchemy.orm import joinedload
 from models.users import Followers
 from models.db import db
 from models.posts import UserPost
@@ -57,6 +56,7 @@ class FollowerLogics:
                     UserPost.user_id.in_(followers_subquery),
                 )
             )
+            .filter(UserPost.draft == False)
             .order_by(UserPost.date_posted.desc())
             .limit(limit)
             .offset(offset)
