@@ -27,4 +27,4 @@ class Posts:
             }
         post_list.append(post_dict)
 
-        return jsonify(post_list)
+        return post_list

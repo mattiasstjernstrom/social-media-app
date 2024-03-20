@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from models.db import db
 
 
@@ -15,7 +16,7 @@ class UserPost(db.Model):
     date_edited = db.Column(db.DateTime, nullable=True)
     draft = db.Column(db.Boolean, default=False)
     friends_only = db.Column(db.Boolean, default=False)
-    followers_only = db.Column(db.Boolean, default=False)
+    users_only = db.Column(db.Boolean, default=False)
     likes = db.Column(db.Integer, default=0)
     shares = db.Column(db.Integer, default=0)
     post_views = db.Column(db.Integer, default=0)
@@ -57,7 +58,7 @@ class UserPost(db.Model):
             "date_edited": self.date_edited,
             "draft": self.draft,
             "friends_only": self.friends_only,
-            "followers_only": self.followers_only,
+            "users_only": self.users_only,
             "likes": self.likes,
             "shares": self.shares,
             "comments": self.comments,

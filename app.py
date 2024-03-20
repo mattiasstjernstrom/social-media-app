@@ -9,6 +9,7 @@ from api import api
 from models.db import db
 from models.users import User, Role
 from models.posts import UserPost
+from models.notifications import UserNotifications
 from views.unauth import unauthenticated
 from views.site import site
 from services import *

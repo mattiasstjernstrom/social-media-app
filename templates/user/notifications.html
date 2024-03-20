@@ -1,0 +1,41 @@
+{% extends "base.html" %}{% block content %}
+<h1>{{ page_title }}</h1>
+{% if notifications|length == 0 %}
+<p class="text-muted">No notifications</p>
+{% else %}
+<ul class="notifications list-group">
+  {% for notification in notifications %}
+  <li
+    class="list-group-item"
+    {%
+    if
+    notification.new
+    %}style="background-color: #e8f4f8;"
+    {%
+    endif
+    %}
+  >
+    {% if notification.new %}
+    <i class="bi bi-star-fill" style="color: #72bcd4; font-size: 10px"></i>
+    {% endif %}
+    <a href="{{ url_for('site.profile', id=notification.from_user_id) }}"
+      >{{ notification.from_username }}</a
+    >
+    {{ notification.notification_types.description | lower }} your {{
+    notification.notification_for_type | lower }}
+    <i
+      ><a
+        class="text-decoration-none"
+        href="{{ url_for('site.view_post', _anchor=notification.to_post, id=notification.for_post) }}"
+        >"{{ notification.text|truncate(25, true, '...') }}"</a
+      ></i
+    >
+    &middot;
+    <i class="small text-muted">{{ notification.date_created_humanized }}</i>
+    {% endfor %}
+  </li>
+</ul>
+<div class="text-center">
+  <i class="text-muted text-center">No more notifications</i>
+</div>
+{% endif %} {% endblock %}

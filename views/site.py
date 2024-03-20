@@ -27,7 +27,8 @@ from models.posts import (
 )
 from models.users import User, Followers
 from modules.check_likes import check_liked
-from modules.user_logics import FollowerLogics, ProfileLogics
+from modules.user_logics import FollowerLogics, ProfileLogics, NotificationLogics
+
 
 site = Blueprint("site", __name__)
 
@@ -203,6 +204,9 @@ def view_post(id):
         get_post.post_views = 0
     get_post.post_views += 1
     db.session.commit()
+
+    NotificationLogics()
+
     get_comments = Comments().load(id)
 
     post_tags = (
@@ -272,6 +276,10 @@ def like_post(post_id):
     get_post.likes += 1
     db.session.commit()
 
+    NotificationLogics().make_notification(
+        get_post.owner_user.id, current_user.id, 1, post_id, "post"
+    )
+
     flash("Post liked", "success")
     return redirect(url_for("site.view_post", id=post_id, _anchor="callout"))
 
@@ -332,6 +340,11 @@ def comment_post(post_id):
         user_id=current_user.id,
         post_id=post_id,
     )
+
+    NotificationLogics().make_notification(
+        get_post.owner_user.id, current_user.id, 1, post_id, "comment"
+    )
+
     db.session.add(save_comment)
     get_post.comments += 1
     db.session.commit()
@@ -454,6 +467,25 @@ def view_tag(tag_name):
 
     return (
         render_template("posts/view_tags.html", **context, posts=get_posts_with_tag),
+        200,
+    )
+
+
+@site.route("/notifications")
+@login_required
+def notifications():
+
+    get_notifications = NotificationLogics().get_notifications(current_user)
+
+    context = {
+        "page_title": "Notifications",
+    }
+    return (
+        render_template(
+            "user/notifications.html",
+            **context,
+            notifications=get_notifications,
+        ),
         200,
     )
 

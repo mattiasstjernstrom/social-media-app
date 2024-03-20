@@ -9,7 +9,8 @@
       <a href="{{ url_for('site.view_post', id=post.id) }}">
         <div
           class="post-image"
-          style="background-image: url('{{ post.splash_url }}');"></div>
+          style="background-image: url('{{ post.splash_url }}');"
+        ></div>
       </a>
     </div>
   </div>
@@ -35,5 +36,5 @@
       </p>
     </div>
   </div>
-  {% endfor %} {% endblock %}
 </div>
+{% endfor %} {% endblock %}
