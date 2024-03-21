@@ -1,5 +1,6 @@
 # seed fake data to the database using the faker library
 from faker import Faker
+from flask_security.utils import hash_password
 from app import user_datastore
 from models.db import db
 from models.users import User, Role
@@ -33,9 +34,10 @@ class DataSeeder:
             return
         db.create_all()
         user_datastore.create_user(
-            email="admin@stjerstrom.me",
+            email="admin@stjernstrom.me",
             username="stjernapps",
-            password="qweqweqwe",
+            password=hash_password("qweqweqwe"),
+            roles=["Admin"],
         )
 
     def seed_users(self):

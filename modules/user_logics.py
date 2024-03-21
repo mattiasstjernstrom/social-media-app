@@ -166,13 +166,14 @@ class NotificationLogics:
         notification_for_id,
         notification_for_type,
     ):
-        notification = UserNotifications(
-            to_user_id=to_user_id,
-            from_user_id=from_user_id,
-            notification_type_id=notification_type_id,
-            notification_for_id=notification_for_id,
-            notification_for_type=notification_for_type,
-            date_read=None,
-        )
-        db.session.add(notification)
-        db.session.commit()
+        if not to_user_id == from_user_id:
+            notification = UserNotifications(
+                to_user_id=to_user_id,
+                from_user_id=from_user_id,
+                notification_type_id=notification_type_id,
+                notification_for_id=notification_for_id,
+                notification_for_type=notification_for_type,
+                date_read=None,
+            )
+            db.session.add(notification)
+            db.session.commit()

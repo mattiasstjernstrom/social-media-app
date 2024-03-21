@@ -27,6 +27,8 @@ def is_logged_in():
 
 # Global config
 def inject_config():
+    if not current_user.is_authenticated:
+        return {"title": "StjernSocial"}
     new_notifications = UserNotifications.query.filter_by(
         to_user_id=current_user.id, date_read=None, date_deleted=None
     ).count()

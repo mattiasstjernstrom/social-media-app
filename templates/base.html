@@ -7,7 +7,11 @@
       {{ page_title }}{% if page_title %} &middot; {{ title }}{% else%} {{ title
       }}{% endif %}
     </title>
-
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='/images/favicon.ico') }}"
+    />
     {% block styles %}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -21,12 +25,12 @@
     />
     {{ bootstrap.load_css() }}
     <link
-      href="{{url_for('static',filename='css/custom.css')}}"
+      href="{{url_for('static',filename='/css/custom.css')}}"
       rel="stylesheet"
     />
 
     <link
-      href="{{url_for('static',filename='css/animations.css')}}"
+      href="{{url_for('static',filename='/css/animations.css')}}"
       rel="stylesheet"
     />
 

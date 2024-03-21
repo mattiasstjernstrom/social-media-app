@@ -21,8 +21,7 @@
     <a href="{{ url_for('site.profile', id=notification.from_user_id) }}"
       >{{ notification.from_username }}</a
     >
-    {{ notification.notification_types.description | lower }} your {{
-    notification.notification_for_type | lower }}
+    {{ notification.notification_types.description | lower }} your post
     <i
       ><a
         class="text-decoration-none"
@@ -35,7 +34,7 @@
     {% endfor %}
   </li>
 </ul>
-<div class="text-center">
+<div class="row text-center mt-3 small">
   <i class="text-muted text-center">No more notifications</i>
 </div>
 {% endif %} {% endblock %}
